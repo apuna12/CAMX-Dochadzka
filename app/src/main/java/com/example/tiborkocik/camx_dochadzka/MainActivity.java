@@ -36,8 +36,7 @@ public class MainActivity extends AppCompatActivity
     List<String> spinnerReason;
     List<String> spinnerTransport;
     TextView time;
-    BroadcastReceiver _broadcastReceiver;
-    private final SimpleDateFormat _sdfWatchTime = new SimpleDateFormat("HH:mm");
+    DatabaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        myDb = new DatabaseHelper(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity
         adapterReason.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
         sItemsTransport.setAdapter(adapterTransport);
+
     }
 
 
