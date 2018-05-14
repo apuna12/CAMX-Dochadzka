@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,8 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     List<String> spinnerTransport;
     TextView time;
     DatabaseHelper myDb;
+    Button submit;
+    Spinner sItemsName, sItemsReason, sItemsTransport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,22 +126,73 @@ public class MainActivity extends AppCompatActivity
         ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerName);
         adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner sItemsName = (Spinner) findViewById(R.id.nameSpinner);
+        sItemsName = (Spinner) findViewById(R.id.nameSpinner);
         sItemsName.setAdapter(adapterName);
 
 
         ArrayAdapter<String> adapterReason = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerReason);
         adapterReason.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner sItemsReason = (Spinner) findViewById(R.id.reasonSpinner);
+        sItemsReason = (Spinner) findViewById(R.id.reasonSpinner);
         sItemsReason.setAdapter(adapterReason);
 
         ArrayAdapter<String> adapterTransport = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerTransport);
         adapterReason.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
+        sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
         sItemsTransport.setAdapter(adapterTransport);
 
+        submit = (Button)findViewById(R.id.submitBtn);
+
+        AddData();
+    }
+
+
+    public void AddData()
+    {
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean isInserted = myDb.insertData(sItemsName.getSelectedItem().toString(), time.getText().toString(), null, null, null, sItemsTransport.getSelectedItem().toString());
+                if(isInserted == true) {
+                    Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
+                    //Cursor res = myDb.getAllData();
+                    Cursor res = myDb.getValue("Tibor Kocik");
+                    //if(myDb)
+                    if(res.getCount() == 0)
+                    {
+                        showMessage("Error", "Nothing found");
+                        return;
+                    }
+
+                    StringBuffer buffer = new StringBuffer();
+                    while(res.moveToNext())
+                    {
+                        buffer.append("MENO: " + res.getString(0) + "\n");
+                        buffer.append("PRICHOD: " + res.getString(1) + "\n");
+                        buffer.append("ODCHOD_NA_OBED: " + res.getString(2) + "\n");
+                        buffer.append("PRICHOD_Z_OBEDA: " + res.getString(3) + "\n");
+                        buffer.append("ODCHOD: " + res.getString(4) + "\n");
+                        buffer.append("POZNAMKA: " + res.getString(5) + "\n\n");
+                    }
+                    showMessage("Data", buffer.toString());
+                }
+                else
+                    Toast.makeText(MainActivity.this, "Not Inserted", Toast.LENGTH_LONG).show();
+
+
+            }
+        });
+    }
+
+
+    public void showMessage(String title, String message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
     }
 
 
