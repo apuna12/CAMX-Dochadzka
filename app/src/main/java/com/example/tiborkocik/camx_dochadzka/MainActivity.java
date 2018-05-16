@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -144,20 +145,118 @@ public class MainActivity extends AppCompatActivity
 
         submit = (Button)findViewById(R.id.submitBtn);
 
+        updateSpinner();
+
+
         AddData();
+
     }
 
+
+    public void updateSpinner()
+    {
+        if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null)
+        {
+            sItemsReason.setSelection(0);
+        }
+
+        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null)
+        {
+            sItemsReason.setSelection(1);
+        }
+
+        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null)
+        {
+            sItemsReason.setSelection(2);
+        }
+
+        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+        {
+            sItemsReason.setSelection(3);
+        }
+
+        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null)
+        {
+            sItemsReason.setSelection(3);
+        }
+
+        sItemsName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null)
+                {
+                    sItemsReason.setSelection(0);
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null)
+                {
+                    sItemsReason.setSelection(1);
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null)
+                {
+                    sItemsReason.setSelection(2);
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+                {
+                    sItemsReason.setSelection(3);
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null)
+                {
+                    sItemsReason.setSelection(3);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
+    }
 
     public void AddData()
     {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean isInserted = myDb.insertData(sItemsName.getSelectedItem().toString(), time.getText().toString(), null, null, null, sItemsTransport.getSelectedItem().toString());
+                Boolean isInserted = null;
+
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null)
+                {
+                    isInserted = myDb.insertData(sItemsName.getSelectedItem().toString(), time.getText().toString(), null, null, null, sItemsTransport.getSelectedItem().toString());
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && (isInserted == null || isInserted == false))
+                {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), time.getText().toString(), null, null, sItemsTransport.getSelectedItem().toString());
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && (isInserted == null || isInserted == false))
+                {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), time.getText().toString(), null, sItemsTransport.getSelectedItem().toString());
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && (isInserted == null || isInserted == false))
+                {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"),getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), time.getText().toString(), sItemsTransport.getSelectedItem().toString());
+                }
+
+                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && (isInserted == null || isInserted == false))
+                {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"),getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD"), sItemsTransport.getSelectedItem().toString());
+                }
+
+
+
                 if(isInserted == true) {
                     Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
-                    //Cursor res = myDb.getAllData();
-                    Cursor res = myDb.getValue("Tibor Kocik");
+                    Cursor res = myDb.getAllData();
+
                     //if(myDb)
                     if(res.getCount() == 0)
                     {
@@ -176,15 +275,23 @@ public class MainActivity extends AppCompatActivity
                         buffer.append("POZNAMKA: " + res.getString(5) + "\n\n");
                     }
                     showMessage("Data", buffer.toString());
+                    isInserted = false;
                 }
                 else
                     Toast.makeText(MainActivity.this, "Not Inserted", Toast.LENGTH_LONG).show();
 
 
+                updateSpinner();
             }
+
         });
+
     }
 
+    public String getData(String meno, String stlpec)
+    {
+        return myDb.getValue(meno, stlpec);
+    }
 
     public void showMessage(String title, String message)
     {

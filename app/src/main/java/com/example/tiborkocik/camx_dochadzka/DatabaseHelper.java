@@ -81,11 +81,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return true;
     }
 
-    public Cursor getValue(String meno)
+    public String getValue(String meno , String stlpec)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("SELECT PRICHOD FROM " + TABLE_NAME + " WHERE MENO = '" + meno + "'" + " ORDER BY PRICHOD DESC LIMIT 1", null);
-        return res;
+        Cursor res = db.rawQuery("SELECT " + stlpec + " FROM " + TABLE_NAME + " WHERE MENO = '" + meno + "'" + " ORDER BY PRICHOD DESC LIMIT 1", null);
+        if(res.getCount()>0)
+        {
+            if (res != null) {
+                res.moveToFirst();
+                String result = res.getString(res.getColumnIndex(stlpec));
+                return result;
+            }
+        }
+        else
+        {
+            return null;
+        }
+        return null; // nemal by tu dojst
     }
 
 }
