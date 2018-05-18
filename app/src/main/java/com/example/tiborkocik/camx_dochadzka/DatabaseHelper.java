@@ -99,5 +99,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
         return null; // nemal by tu dojst
     }
+    public void setValue(String stlpec, String hodnota)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(stlpec, hodnota);
+        db.insert(TABLE_NAME, null, contentValues);
+    }
 
 }

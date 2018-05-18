@@ -226,29 +226,31 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Boolean isInserted = null;
 
-                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null)
-                {
+
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null) {
                     isInserted = myDb.insertData(sItemsName.getSelectedItem().toString(), time.getText().toString(), null, null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && (isInserted == null || isInserted == false))
-                {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), time.getText().toString(), null, null, sItemsTransport.getSelectedItem().toString());
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && sItemsReason.getSelectedItem().toString() != "Odchod" && (isInserted == null || isInserted == false)) {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), time.getText().toString(), null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && (isInserted == null || isInserted == false))
-                {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), time.getText().toString(), null, sItemsTransport.getSelectedItem().toString());
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && sItemsReason.getSelectedItem().toString() != "Odchod" && (isInserted == null || isInserted == false)) {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), time.getText().toString(), null, sItemsTransport.getSelectedItem().toString());
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && (isInserted == null || isInserted == false))
-                {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"),getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), time.getText().toString(), sItemsTransport.getSelectedItem().toString());
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && (isInserted == null || isInserted == false)) {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), time.getText().toString(), sItemsTransport.getSelectedItem().toString());
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && (isInserted == null || isInserted == false))
-                {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(),getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"),getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD"), sItemsTransport.getSelectedItem().toString());
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && (isInserted == null || isInserted == false)) {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD"), sItemsTransport.getSelectedItem().toString());
+                }
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && (isInserted == null || isInserted == false)) {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA"), time.getText().toString(), sItemsTransport.getSelectedItem().toString());
+                }
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && sItemsReason.getSelectedItem().toString() == "Odchod" && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && (isInserted == null || isInserted == false)) {
+                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), getData(sItemsName.getSelectedItem().toString(), "PRICHOD"), getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED"), time.getText().toString(), time.getText().toString(), sItemsTransport.getSelectedItem().toString());
                 }
 
 
