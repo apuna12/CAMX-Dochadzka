@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     public static final String DATABASE_NAME = "dochadzka.db";
     public static final String TABLE_NAME = "dochadzka_tabulka";
+    public static final String COL_ID = "ID";
     public static final String COL_1 = "MENO";
     public static final String COL_2 = "PRICHOD";
     public static final String COL_3 = "ODCHOD_NA_OBED";
@@ -33,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " ("+ COL_1 +" TEXT PRIMARY KEY, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT)");
     }
 
     @Override
@@ -42,10 +43,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         onCreate(sqLiteDatabase);
     }
 
-    public boolean insertData(String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
+    public boolean insertData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_ID, id);
         contentValues.put(COL_1, meno);
         contentValues.put(COL_2, prichod);
         contentValues.put(COL_3, odchObed);
@@ -99,6 +101,26 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
         return null; // nemal by tu dojst
     }
+
+    public String getValueOfId(String id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT " + id + " FROM " + TABLE_NAME + " ORDER BY PRICHOD DESC LIMIT 1", null);
+        if(res.getCount()>0)
+        {
+            if (res != null) {
+                res.moveToFirst();
+                String result = res.getString(res.getColumnIndex(id));
+                return result;
+            }
+        }
+        else
+        {
+            return "1";
+        }
+        return null; // nemal by tu dojst
+    }
+
     public void setValue(String stlpec, String hodnota)
     {
         SQLiteDatabase db = this.getWritableDatabase();
