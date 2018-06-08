@@ -102,15 +102,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return null; // nemal by tu dojst
     }
 
-    public String getValueOfId(String id)
+    public String getHighestValueOfId()
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("SELECT " + id + " FROM " + TABLE_NAME + " ORDER BY PRICHOD DESC LIMIT 1", null);
+        Cursor res = db.rawQuery("SELECT ID" + " FROM " + TABLE_NAME + " ORDER BY ID DESC LIMIT 1", null);
         if(res.getCount()>0)
         {
             if (res != null) {
                 res.moveToFirst();
-                String result = res.getString(res.getColumnIndex(id));
+                String result = res.getString(res.getColumnIndex("ID"));
                 return result;
             }
         }
