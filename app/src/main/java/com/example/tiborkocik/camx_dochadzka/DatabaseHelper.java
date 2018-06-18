@@ -129,4 +129,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.insert(TABLE_NAME, null, contentValues);
     }
 
+    public  Cursor getInformation(SQLiteDatabase db)
+    {
+        String[] projection = {COL_1, COL_2, COL_3, COL_4, COL_5, COL_6};
+        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
+        return cursor;
+    }
 }

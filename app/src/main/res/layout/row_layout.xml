@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="75dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="MENO"
+        android:gravity="center_horizontal"
+        android:textSize="10dp"
+        android:id="@+id/viewName"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Prichod"
+        android:gravity="center_horizontal"
+        android:textSize="10dp"
+        android:id="@+id/viewPrichod"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Odchod na obed"
+        android:gravity="center_horizontal"
+        android:textSize="10dp"
+        android:id="@+id/viewOdchodNaObed"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Prichod z obeda"
+        android:gravity="center_horizontal"
+        android:textSize="10dp"
+        android:id="@+id/viewPrichodZObeda"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Odchod"
+        android:gravity="center_horizontal"
+        android:textSize="10dp"
+        android:id="@+id/viewOdchod"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Poznámka"
+        android:gravity="center_horizontal"
+        android:textSize="10dp"
+        android:id="@+id/viewPoznamka"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>

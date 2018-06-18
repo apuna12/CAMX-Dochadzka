@@ -5,11 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,9 +29,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.sql.Time;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +46,11 @@ public class MainActivity extends AppCompatActivity
     DatabaseHelper myDb;
     Button submit;
     Spinner sItemsName, sItemsReason, sItemsTransport;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
+    ArrayList<ZAMESTNANCI> arrayList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,18 +289,36 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
+
                 if(isInserted == true) {
                     Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
-                    Cursor res = myDb.getAllData();
-
-                    //if(myDb)
-                    if(res.getCount() == 0)
+                    //Cursor res = myDb.getAllData();
+                    Cursor cursor = myDb.getAllData();
+                    if(cursor.getCount() == 0)
                     {
                         showMessage("Error", "Nothing found");
                         return;
                     }
+                    recyclerView = (RecyclerView)findViewById(R.id.dbView);
+                    layoutManager = new LinearLayoutManager(MainActivity.this);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setHasFixedSize(true);
+                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
 
-                    StringBuffer buffer = new StringBuffer();
+                    cursor.moveToFirst();
+                    do {
+
+                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6));
+                        arrayList.add(zamestnanci);
+
+                    }while (cursor.moveToNext());
+                    myDb.close();
+
+                    adapter = new RecyclerAdapter(arrayList);
+                    recyclerView.setAdapter(adapter);
+
+                    /*StringBuffer buffer = new StringBuffer();
                     while(res.moveToNext())
                     {
                         buffer.append("ID: " + res.getString(0) + "\n");
@@ -305,7 +329,10 @@ public class MainActivity extends AppCompatActivity
                         buffer.append("ODCHOD: " + res.getString(5) + "\n");
                         buffer.append("POZNAMKA: " + res.getString(6) + "\n\n");
                     }
-                    showMessage("Data", buffer.toString());
+                    showMessage("Data", buffer.toString());*/
+
+                    //startActivity(new Intent(MainActivity.this, DisplayList.class));
+
                     isInserted = false;
                 }
                 else
