@@ -250,6 +250,7 @@ public class MainActivity extends AppCompatActivity
 
                 } catch (Exception e) {}
                 id = getLatestId("ID");
+                String menoGetData = getData(sItemsName.getSelectedItem().toString(), "MENO");
                 String prichodGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
                 String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                 String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
@@ -258,33 +259,33 @@ public class MainActivity extends AppCompatActivity
                 if(prichodGetData == null && diffDays == 0)
                 {
                     id++;
-                    isInserted = myDb.insertData(id, sItemsName.getSelectedItem().toString(), datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays>0)
                 {
                     id++;
-                    isInserted = myDb.insertData(id, sItemsName.getSelectedItem().toString(), datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData == null)
                 {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null)
                 {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null)
                 {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData != null)
                 {
-                    isInserted = myDb.updateData(sItemsName.getSelectedItem().toString(), prichodGetData, odchObedGetData, prichObedGetData, odchodGetData, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(menoGetData, prichodGetData, odchObedGetData, prichObedGetData, odchodGetData, sItemsTransport.getSelectedItem().toString());
                 }
 
 
@@ -293,7 +294,6 @@ public class MainActivity extends AppCompatActivity
 
                 if(isInserted == true) {
                     Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
-                    //Cursor res = myDb.getAllData();
                     Cursor cursor = myDb.getAllData();
                     if(cursor.getCount() == 0)
                     {
@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity
                         return;
                     }
                     recyclerView = (RecyclerView)findViewById(R.id.dbView);
+                    arrayList.clear();
                     layoutManager = new LinearLayoutManager(MainActivity.this);
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setHasFixedSize(true);
@@ -309,7 +310,7 @@ public class MainActivity extends AppCompatActivity
                     cursor.moveToFirst();
                     do {
 
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6));
+                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(System.getProperty("line.separator") + cursor.getString(1),System.getProperty("line.separator") +cursor.getString(2), System.getProperty("line.separator") +cursor.getString(3),System.getProperty("line.separator") +cursor.getString(4),System.getProperty("line.separator") + cursor.getString(5),System.getProperty("line.separator") +cursor.getString(6));
                         arrayList.add(zamestnanci);
 
                     }while (cursor.moveToNext());
