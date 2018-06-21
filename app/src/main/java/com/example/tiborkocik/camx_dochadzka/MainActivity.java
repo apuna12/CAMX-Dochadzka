@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
                 } catch (Exception e) {}
                 id = getLatestId("ID");
-                String menoGetData = getData(sItemsName.getSelectedItem().toString(), "MENO");
+                String menoGetData = sItemsName.getSelectedItem().toString();
                 String prichodGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
                 String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                 String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
@@ -309,7 +309,6 @@ public class MainActivity extends AppCompatActivity
                     recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,1,GridLayoutManager.VERTICAL,false));
                     recyclerView.setHasFixedSize(true);
                     //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
-
                     cursor.moveToFirst();
                     do {
 

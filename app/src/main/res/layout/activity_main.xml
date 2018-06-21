@@ -136,21 +136,19 @@
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
         </LinearLayout>
+
         <ImageView
             android:paddingTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#000"/>
+
         <android.support.v7.widget.RecyclerView
             android:paddingTop="40dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/dbView"/>
-        <ImageView
-            android:paddingTop="10dp"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="#000"/>
+
     </LinearLayout>
 </ScrollView>
 
