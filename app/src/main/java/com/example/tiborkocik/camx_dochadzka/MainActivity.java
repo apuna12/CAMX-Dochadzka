@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -294,6 +295,7 @@ public class MainActivity extends AppCompatActivity
 
                 if(isInserted == true) {
                     Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
+                    //Cursor res = myDb.getAllData();
                     Cursor cursor = myDb.getAllData();
                     if(cursor.getCount() == 0)
                     {
@@ -303,14 +305,15 @@ public class MainActivity extends AppCompatActivity
                     recyclerView = (RecyclerView)findViewById(R.id.dbView);
                     arrayList.clear();
                     layoutManager = new LinearLayoutManager(MainActivity.this);
-                    recyclerView.setLayoutManager(layoutManager);
+
+                    recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,1,GridLayoutManager.VERTICAL,false));
                     recyclerView.setHasFixedSize(true);
                     //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
 
                     cursor.moveToFirst();
                     do {
 
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(System.getProperty("line.separator") + cursor.getString(1),System.getProperty("line.separator") +cursor.getString(2), System.getProperty("line.separator") +cursor.getString(3),System.getProperty("line.separator") +cursor.getString(4),System.getProperty("line.separator") + cursor.getString(5),System.getProperty("line.separator") +cursor.getString(6));
+                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI("MENO" + System.getProperty("line.separator") + cursor.getString(1),"PRICHOD" + System.getProperty("line.separator") +cursor.getString(2), "ODCHOD NA OBED" + System.getProperty("line.separator") +cursor.getString(3),"PRICHOD Z OBEDA" + System.getProperty("line.separator") + cursor.getString(4),"ODCHOD" + System.getProperty("line.separator") + cursor.getString(5),"POZNAMKA" + System.getProperty("line.separator") +cursor.getString(6));
                         arrayList.add(zamestnanci);
 
                     }while (cursor.moveToNext());
@@ -347,6 +350,7 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
+
 
     public String getData(String meno, String stlpec)
     {

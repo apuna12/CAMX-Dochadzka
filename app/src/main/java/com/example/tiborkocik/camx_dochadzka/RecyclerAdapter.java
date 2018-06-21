@@ -30,7 +30,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.Prich.setText(zamestnanci.getPrichod());
         holder.OdchObed.setText(zamestnanci.getOdchod_na_obed());
         holder.PrichObed.setText(zamestnanci.getPrichod_z_obeda());
-        holder.OdchObed.setText(zamestnanci.getOdchod());
+        holder.odcho.setText(zamestnanci.getOdchod());
         holder.poznamka.setText(zamestnanci.getPoznamka());
     }
 
@@ -45,7 +45,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         RecyclerViewHolder(View view)
         {
             super(view);
-            Name = (TextView)view.findViewById(R.id.viewPrichod);
+            Name = (TextView)view.findViewById(R.id.viewName);
             Prich = (TextView)view.findViewById(R.id.viewPrichod);
             OdchObed = (TextView)view.findViewById(R.id.viewOdchodNaObed);
             PrichObed = (TextView)view.findViewById(R.id.viewPrichodZObeda);
