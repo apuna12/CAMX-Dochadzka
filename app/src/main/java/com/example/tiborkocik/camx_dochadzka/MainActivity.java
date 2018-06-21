@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity
                     cursor.moveToFirst();
                     do {
 
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI("MENO" + System.getProperty("line.separator") + cursor.getString(1),"PRICHOD" + System.getProperty("line.separator") +cursor.getString(2), "ODCHOD NA OBED" + System.getProperty("line.separator") +cursor.getString(3),"PRICHOD Z OBEDA" + System.getProperty("line.separator") + cursor.getString(4),"ODCHOD" + System.getProperty("line.separator") + cursor.getString(5),"POZNAMKA" + System.getProperty("line.separator") +cursor.getString(6));
+                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(cursor.getString(1),cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6));
                         arrayList.add(zamestnanci);
 
                     }while (cursor.moveToNext());
