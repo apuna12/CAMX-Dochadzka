@@ -240,14 +240,19 @@ public class MainActivity extends AppCompatActivity
                 String desiredDate = null;
                 String oldDesiredDate = null;
                 long diffDays = 0;
+                long diff = 0;
+                Date date;
+                Date date2;
                 try {
-                    Date date = curDateFormat.parse(datetimeString);
-                    desiredDate = desiredDateFormat.format(date);
+                    date = curDateFormat.parse(datetimeString);
+                    desiredDate = String.valueOf(date.getMonth());
+                    desiredDate = desiredDate + String.valueOf(date.getDate());
                     String olddate = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
-                    Date date2 = curDateFormat.parse(olddate);
-                    oldDesiredDate = desiredDateFormat.format(date2);
-                    long diff = Math.abs(date.getTime() - date2.getTime());
-                    diffDays = diff / (24 * 60 * 60 * 1000);
+                    date2 = curDateFormat.parse(olddate);
+                    oldDesiredDate = String.valueOf(date2.getMonth());
+                    oldDesiredDate = oldDesiredDate + String.valueOf(date2.getDate());
+                    diff = Math.abs(Long.parseLong(desiredDate) - Long.parseLong(oldDesiredDate));
+                    diffDays = diff; /*/ (1000*60*60*24);*/
 
                 } catch (Exception e) {}
                 id = getLatestId("ID");
