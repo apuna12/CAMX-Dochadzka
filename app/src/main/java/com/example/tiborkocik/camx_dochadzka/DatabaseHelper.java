@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     }
 
 
-    public Boolean updateData(String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
+    public Boolean updateData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -79,7 +79,19 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(COL_4, prichObed);
         contentValues.put(COL_5, odchod);
         contentValues.put(COL_6, poznamka);
-        db.update(TABLE_NAME, contentValues, "MENO = ?", new String[] {meno});
+        if(prichod != null)
+            prichod = "'" + prichod + "'";
+        if(odchObed != null)
+            odchObed = "'" + odchObed + "'";
+        if(prichObed != null)
+            prichObed = "'" + prichObed + "'";
+        if(odchod != null)
+            odchod = "'" + odchod + "'";
+
+        String sql = "UPDATE " + TABLE_NAME + " SET " + COL_2 + " = " + prichod + ", " + COL_3 + " = " + odchObed + ", " + COL_4 + " = " + prichObed + ", " + COL_5 + " = " + odchod + ", " + COL_6 + " = '" + poznamka + "' WHERE " + COL_ID + " = '" + id + "' AND " + COL_1 + " = '" + meno + "'";
+        db.execSQL(sql);
+        //db.rawQuery("UPDATE " + TABLE_NAME + " SET " + COL_2 + " = " + prichod + ", " + COL_3 + " = " + odchObed + ", " + COL_4 + " = " + prichObed + ", " + COL_5 + " = " + odchod + ", " + COL_6 + " = " + poznamka + " WHERE " +  COL_ID + " = '" + id + "'");
+        //db.update(TABLE_NAME, contentValues, "MENO = ?", new String[] {meno});
         return true;
     }
 

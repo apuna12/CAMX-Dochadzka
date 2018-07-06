@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
         ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerName);
         adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -163,57 +162,109 @@ public class MainActivity extends AppCompatActivity
 
     public void updateSpinner()
     {
-        if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null)
+
+        String datetimeString = time.getText().toString();
+        SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+        String desiredDate;
+        String oldDesiredDate;
+        long diffDays = 0;
+        long diff = 0;
+        Date date;
+        Date date2;
+        try {
+            date = curDateFormat.parse(datetimeString);
+            desiredDate = String.valueOf(date.getMonth());
+            desiredDate = desiredDate + String.valueOf(date.getDate());
+            String olddate = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
+            date2 = curDateFormat.parse(olddate);
+            oldDesiredDate = String.valueOf(date2.getMonth());
+            oldDesiredDate = oldDesiredDate + String.valueOf(date2.getDate());
+            diff = Math.abs(Long.parseLong(desiredDate) - Long.parseLong(oldDesiredDate));
+            diffDays = diff;
+
+        } catch (Exception e) {}
+
+        if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0)
         {
             sItemsReason.setSelection(0);
         }
 
-        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null)
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED" ) == null && diffDays == 0)
         {
             sItemsReason.setSelection(1);
         }
 
-        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null)
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays == 0)
         {
             sItemsReason.setSelection(2);
         }
 
-        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && diffDays == 0)
         {
             sItemsReason.setSelection(3);
         }
 
-        if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null)
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && diffDays == 0)
         {
             sItemsReason.setSelection(3);
+        }
+
+        else
+        {
+            sItemsReason.setSelection(0);
         }
 
         sItemsName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null)
+                String datetimeString = time.getText().toString();
+                SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                String desiredDate;
+                String oldDesiredDate;
+                long diffDays = 0;
+                long diff = 0;
+                Date date;
+                Date date2;
+                try {
+                    date = curDateFormat.parse(datetimeString);
+                    desiredDate = String.valueOf(date.getMonth());
+                    desiredDate = desiredDate + String.valueOf(date.getDate());
+                    String olddate = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
+                    date2 = curDateFormat.parse(olddate);
+                    oldDesiredDate = String.valueOf(date2.getMonth());
+                    oldDesiredDate = oldDesiredDate + String.valueOf(date2.getDate());
+                    diff = Math.abs(Long.parseLong(desiredDate) - Long.parseLong(oldDesiredDate));
+                    diffDays = diff;
+
+                } catch (Exception e) {}
+
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0)
                 {
                     sItemsReason.setSelection(0);
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null)
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && diffDays == 0)
                 {
                     sItemsReason.setSelection(1);
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null)
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays == 0)
                 {
                     sItemsReason.setSelection(2);
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && diffDays == 0)
                 {
                     sItemsReason.setSelection(3);
                 }
 
-                if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null)
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && diffDays == 0)
                 {
                     sItemsReason.setSelection(3);
+                }
+                else
+                {
+                    sItemsReason.setSelection(0);
                 }
             }
 
@@ -224,11 +275,11 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-
     }
 
     public void AddData()
     {
+        updateSpinner();
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,11 +312,18 @@ public class MainActivity extends AppCompatActivity
                 String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                 String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
                 String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
-
                 if(prichodGetData == null && diffDays == 0)
                 {
-                    id++;
-                    isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                    if(id==1 && myDb.getAllData() == null)
+                    {
+                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        id++;
+                    }
+                    else
+                    {
+                        id++;
+                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                    }
                 }
 
                 else if(prichodGetData != null && diffDays>0)
@@ -276,22 +334,22 @@ public class MainActivity extends AppCompatActivity
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData == null)
                 {
-                    isInserted = myDb.updateData(menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null)
                 {
-                    isInserted = myDb.updateData(menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null)
                 {
-                    isInserted = myDb.updateData(menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
                 }
 
-                else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData != null)
+                else
                 {
-                    isInserted = myDb.updateData(menoGetData, prichodGetData, odchObedGetData, prichObedGetData, odchodGetData, sItemsTransport.getSelectedItem().toString());
+                    isInserted = true;
                 }
 
 
