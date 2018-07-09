@@ -14,6 +14,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -152,19 +153,24 @@ public class MainActivity extends AppCompatActivity
 
         submit = (Button)findViewById(R.id.submitBtn);
 
+
         updateSpinner();
-
-
         AddData();
-
     }
 
 
     public void updateSpinner()
     {
 
-        String datetimeString = time.getText().toString();
+
         SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formatDate = df.format(c.getTime());
+        String strDate = mdformat.format(calendar.getTime()) + "   " + formatDate;
+        String datetimeString = strDate;
         String desiredDate;
         String oldDesiredDate;
         long diffDays = 0;
@@ -182,7 +188,9 @@ public class MainActivity extends AppCompatActivity
             diff = Math.abs(Long.parseLong(desiredDate) - Long.parseLong(oldDesiredDate));
             diffDays = diff;
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.i("Exception",e.toString());
+        }
 
         if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0)
         {
@@ -217,8 +225,14 @@ public class MainActivity extends AppCompatActivity
         sItemsName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String datetimeString = time.getText().toString();
                 SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                String formatDate = df.format(c.getTime());
+                String strDate = mdformat.format(calendar.getTime()) + "   " + formatDate;
+                String datetimeString = strDate;
                 String desiredDate;
                 String oldDesiredDate;
                 long diffDays = 0;
@@ -451,6 +465,17 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
