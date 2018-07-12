@@ -69,6 +69,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     }
 
 
+    public Cursor getDataByIDequalsOne()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE ID = 1",null);
+        return  res;
+    }
+
     public Boolean updateData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -112,6 +119,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             return null;
         }
         return null; // nemal by tu dojst
+    }
+
+    public int getLatestID(String name)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT ID FROM " + TABLE_NAME + " WHERE MENO='" + name + "' ORDER BY ID DESC LIMIT 1", null);
+        if(res.getCount()>0)
+        {
+            if(res != null)
+            {
+                res.moveToFirst();
+                int result = res.getInt(res.getColumnIndex("ID"));
+                return  result;
+            }
+        }
+        return 0; //nedojde tu
     }
 
     public String getHighestValueOfId()

@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean isInserted = null;
+                Boolean isInserted = false;
                 int id = 0;
                 String datetimeString = time.getText().toString();
                 SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
@@ -328,7 +328,8 @@ public class MainActivity extends AppCompatActivity
                 String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
                 if(prichodGetData == null && diffDays == 0)
                 {
-                    if(id==1 && myDb.getAllData() == null)
+                    Cursor check = myDb.getDataByIDequalsOne();
+                    if(id==1 && check.getCount()==0) //&& myDb.getAllData() == null)
                     {
                         isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                         id++;
@@ -348,31 +349,25 @@ public class MainActivity extends AppCompatActivity
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData == null)
                 {
+                    id = myDb.getLatestID(menoGetData);
                     isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null)
                 {
+                    id = myDb.getLatestID(menoGetData);
                     isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
                 }
 
                 else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null)
                 {
+                    id = myDb.getLatestID(menoGetData);
                     isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
                 }
-
-                else
-                {
-                    isInserted = true;
-                }
-
-
-
 
 
                 if(isInserted == true) {
                     Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
-                    //Cursor res = myDb.getAllData();
                     Cursor cursor = myDb.getAllData();
                     if(cursor.getCount() == 0)
                     {
@@ -398,20 +393,6 @@ public class MainActivity extends AppCompatActivity
                     adapter = new RecyclerAdapter(arrayList);
                     recyclerView.setAdapter(adapter);
 
-                    /*StringBuffer buffer = new StringBuffer();
-                    while(res.moveToNext())
-                    {
-                        buffer.append("ID: " + res.getString(0) + "\n");
-                        buffer.append("MENO: " + res.getString(1) + "\n");
-                        buffer.append("PRICHOD: " + res.getString(2) + "\n");
-                        buffer.append("ODCHOD_NA_OBED: " + res.getString(3) + "\n");
-                        buffer.append("PRICHOD_Z_OBEDA: " + res.getString(4) + "\n");
-                        buffer.append("ODCHOD: " + res.getString(5) + "\n");
-                        buffer.append("POZNAMKA: " + res.getString(6) + "\n\n");
-                    }
-                    showMessage("Data", buffer.toString());*/
-
-                    //startActivity(new Intent(MainActivity.this, DisplayList.class));
 
                     isInserted = false;
                 }
@@ -426,6 +407,7 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
+
 
 
     public String getData(String meno, String stlpec)
