@@ -148,6 +148,18 @@ public class MainActivity extends AppCompatActivity
                     sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
                     sItemsTransport.setAdapter(adapterTransport);
 
+                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                    arrayList.clear();
+                    layoutManager = new LinearLayoutManager(MainActivity.this);
+
+                    recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                    recyclerView.setHasFixedSize(true);
+                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                    myDb.close();
+
+                    adapter = new RecyclerAdapter(arrayList);
+                    recyclerView.setAdapter(adapter);
+
                     updateSpinner();
 
                 }
@@ -173,6 +185,19 @@ public class MainActivity extends AppCompatActivity
                     adapterTransportGray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
                     sItemsTransport.setAdapter(adapterTransportGray);
+
+                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                    arrayList.clear();
+                    layoutManager = new LinearLayoutManager(MainActivity.this);
+
+                    recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                    recyclerView.setHasFixedSize(true);
+                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                    myDb.close();
+
+                    adapter = new RecyclerAdapter(arrayList);
+                    recyclerView.setAdapter(adapter);
+
                     updateSpinner();
                 }
             }
