@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,9 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     List<String> spinnerName;
     List<String> spinnerReason;
     List<String> spinnerTransport;
-    TextView time;
+    TextView time, dovodTW, dopravaTW;
     DatabaseHelper myDb;
     Button submit;
     Spinner sItemsName, sItemsReason, sItemsTransport;
@@ -52,7 +56,10 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<ZAMESTNANCI> arrayList = new ArrayList<>();
-
+    RadioButton addDataCheckBox, viewDataCheckbox;
+    ArrayAdapter<String> adapterReason;
+    ArrayAdapter<String> adapterTransport;
+    ArrayAdapter<String> adapterTransportGray, adapterReasonGray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +119,68 @@ public class MainActivity extends AppCompatActivity
 
 
 
+        dovodTW = (TextView)findViewById(R.id.textView3);
+        dopravaTW = (TextView)findViewById(R.id.textView4);
+        addDataCheckBox = (RadioButton)findViewById(R.id.checkBox4);
+        viewDataCheckbox = (RadioButton)findViewById(R.id.checkBox3);
+        addDataCheckBox.setChecked(true);
+        addDataCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(addDataCheckBox.isChecked())
+                {
+                    viewDataCheckbox.setChecked(false);
+                    sItemsReason.setEnabled(true);
+                    sItemsReason.setClickable(true);
+                    sItemsReason.setBackgroundColor(Color.WHITE);
+                    sItemsTransport.setEnabled(true);
+                    sItemsTransport.setClickable(true);
+                    sItemsTransport.setBackgroundColor(Color.WHITE);
+                    dovodTW.setTextColor(Color.BLACK);
+                    dopravaTW.setTextColor(Color.BLACK);
+
+
+                    adapterReason.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sItemsReason = (Spinner) findViewById(R.id.reasonSpinner);
+                    sItemsReason.setAdapter(adapterReason);
+
+                    adapterTransport.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
+                    sItemsTransport.setAdapter(adapterTransport);
+
+                    updateSpinner();
+
+                }
+            }
+        });
+        viewDataCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(viewDataCheckbox.isChecked())
+                {
+                    addDataCheckBox.setChecked(false);
+                    sItemsReason.setEnabled(false);
+                    sItemsReason.setClickable(false);
+                    sItemsTransport.setEnabled(false);
+                    sItemsTransport.setClickable(false);
+                    dovodTW.setTextColor(Color.GRAY);
+                    dopravaTW.setTextColor(Color.GRAY);
+
+                    adapterReasonGray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sItemsReason = (Spinner) findViewById(R.id.reasonSpinner);
+                    sItemsReason.setAdapter(adapterReasonGray);
+
+                    adapterTransportGray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
+                    sItemsTransport.setAdapter(adapterTransportGray);
+                    updateSpinner();
+                }
+            }
+        });
+
+
+
+
         spinnerName =  new ArrayList<String>();
         spinnerName.add("Martin Mrazko");
         spinnerName.add("Tomas Granat");
@@ -139,17 +208,23 @@ public class MainActivity extends AppCompatActivity
         sItemsName.setAdapter(adapterName);
 
 
-        ArrayAdapter<String> adapterReason = new ArrayAdapter<String>(
+        adapterReason = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerReason);
         adapterReason.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sItemsReason = (Spinner) findViewById(R.id.reasonSpinner);
         sItemsReason.setAdapter(adapterReason);
 
-        ArrayAdapter<String> adapterTransport = new ArrayAdapter<String>(
+        adapterTransport = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerTransport);
-        adapterReason.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterTransport.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sItemsTransport = (Spinner) findViewById(R.id.transportSpinner);
         sItemsTransport.setAdapter(adapterTransport);
+
+
+        adapterReasonGray = new ArrayAdapter<String>(
+                this, R.layout.spinner_item_gray, spinnerReason);
+        adapterTransportGray = new ArrayAdapter<String>(
+                this, R.layout.spinner_item_gray, spinnerTransport);
 
         submit = (Button)findViewById(R.id.submitBtn);
 
@@ -297,111 +372,141 @@ public class MainActivity extends AppCompatActivity
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean isInserted = false;
-                int id = 0;
-                String datetimeString = time.getText().toString();
-                SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
-                SimpleDateFormat desiredDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                String desiredDate = null;
-                String oldDesiredDate = null;
-                long diffDays = 0;
-                long diff = 0;
-                Date date;
-                Date date2;
-                try {
-                    date = curDateFormat.parse(datetimeString);
-                    desiredDate = String.valueOf(date.getMonth());
-                    desiredDate = desiredDate + String.valueOf(date.getDate());
-                    String olddate = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
-                    date2 = curDateFormat.parse(olddate);
-                    oldDesiredDate = String.valueOf(date2.getMonth());
-                    oldDesiredDate = oldDesiredDate + String.valueOf(date2.getDate());
-                    diff = Math.abs(Long.parseLong(desiredDate) - Long.parseLong(oldDesiredDate));
-                    diffDays = diff; /*/ (1000*60*60*24);*/
-
-                } catch (Exception e) {}
-                id = getLatestId("ID");
                 String menoGetData = sItemsName.getSelectedItem().toString();
-                String prichodGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
-                String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
-                String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
-                String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
-                if(prichodGetData == null && diffDays == 0)
-                {
-                    Cursor check = myDb.getDataByIDequalsOne();
-                    if(id==1 && check.getCount()==0) //&& myDb.getAllData() == null)
-                    {
-                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                if(addDataCheckBox.isChecked() && !viewDataCheckbox.isChecked()) {
+
+
+                    Boolean isInserted = false;
+                    int id = 0;
+                    String datetimeString = time.getText().toString();
+                    SimpleDateFormat curDateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                    SimpleDateFormat desiredDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    String desiredDate = null;
+                    String oldDesiredDate = null;
+                    long diffDays = 0;
+                    long diff = 0;
+                    Date date;
+                    Date date2;
+                    try {
+                        date = curDateFormat.parse(datetimeString);
+                        desiredDate = String.valueOf(date.getMonth());
+                        desiredDate = desiredDate + String.valueOf(date.getDate());
+                        String olddate = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
+                        date2 = curDateFormat.parse(olddate);
+                        oldDesiredDate = String.valueOf(date2.getMonth());
+                        oldDesiredDate = oldDesiredDate + String.valueOf(date2.getDate());
+                        diff = Math.abs(Long.parseLong(desiredDate) - Long.parseLong(oldDesiredDate));
+                        diffDays = diff; /*/ (1000*60*60*24);*/
+
+                    } catch (Exception e) {
+                    }
+                    id = getLatestId("ID");
+                    String prichodGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
+                    String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
+                    String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
+                    String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
+                    if (prichodGetData == null && diffDays == 0) {
+                        Cursor check = myDb.getDataByIDequalsOne();
+                        if (id == 1 && check.getCount() == 0) //&& myDb.getAllData() == null)
+                        {
+                            isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                            id++;
+                        } else {
+                            id++;
+                            isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        }
+                    } else if (prichodGetData != null && diffDays > 0) {
                         id++;
+                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData == null) {
+                        id = myDb.getLatestID(menoGetData);
+                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
+                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null) {
+                        id = myDb.getLatestID(menoGetData);
+                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
+                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null) {
+                        id = myDb.getLatestID(menoGetData);
+                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                    }
+
+
+                    if (isInserted == true) {
+                        Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
+                        Cursor cursor = myDb.getAllData();
+                        if (cursor.getCount() == 0) {
+                            showMessage("Error", "Nothing found");
+                            return;
+                        }
+                        recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                        arrayList.clear();
+                        layoutManager = new LinearLayoutManager(MainActivity.this);
+
+                        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                        recyclerView.setHasFixedSize(true);
+                        //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                        cursor.moveToFirst();
+                        do {
+
+                            ZAMESTNANCI zamestnanci = new ZAMESTNANCI(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
+                            arrayList.add(zamestnanci);
+
+                        } while (cursor.moveToNext());
+                        myDb.close();
+
+                        adapter = new RecyclerAdapter(arrayList);
+                        recyclerView.setAdapter(adapter);
+
+
+                        isInserted = false;
+                    } else
+                        Toast.makeText(MainActivity.this, "Not Inserted", Toast.LENGTH_LONG).show();
+
+
+                    updateSpinner();
+                }
+                else if(viewDataCheckbox.isChecked() && !addDataCheckBox.isChecked())
+                {
+                    SQLiteDatabase db = myDb.getWritableDatabase();
+                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "'", null);
+                    if(viewDataCursor.getCount()>0)
+                    {
+                        recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                        arrayList.clear();
+                        layoutManager = new LinearLayoutManager(MainActivity.this);
+
+                        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                        recyclerView.setHasFixedSize(true);
+                        //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                        viewDataCursor.moveToFirst();
+                        do {
+
+                            ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6));
+                            arrayList.add(zamestnanci);
+
+                        } while (viewDataCursor.moveToNext());
+                        myDb.close();
+
+                        adapter = new RecyclerAdapter(arrayList);
+                        recyclerView.setAdapter(adapter);
                     }
                     else
                     {
-                        id++;
-                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
-                    }
-                }
+                        Toast.makeText(MainActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
+                        recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                        arrayList.clear();
+                        layoutManager = new LinearLayoutManager(MainActivity.this);
 
-                else if(prichodGetData != null && diffDays>0)
-                {
-                    id++;
-                    isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
-                }
+                        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                        recyclerView.setHasFixedSize(true);
+                        //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                        myDb.close();
 
-                else if(prichodGetData != null && diffDays == 0 && odchObedGetData == null)
-                {
-                    id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
-                }
-
-                else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null)
-                {
-                    id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
-                }
-
-                else if(prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null)
-                {
-                    id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
-                }
-
-
-                if(isInserted == true) {
-                    Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
-                    Cursor cursor = myDb.getAllData();
-                    if(cursor.getCount() == 0)
-                    {
-                        showMessage("Error", "Nothing found");
+                        adapter = new RecyclerAdapter(arrayList);
+                        recyclerView.setAdapter(adapter);
                         return;
                     }
-                    recyclerView = (RecyclerView)findViewById(R.id.dbView);
-                    arrayList.clear();
-                    layoutManager = new LinearLayoutManager(MainActivity.this);
 
-                    recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,1,GridLayoutManager.VERTICAL,false));
-                    recyclerView.setHasFixedSize(true);
-                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
-                    cursor.moveToFirst();
-                    do {
-
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(cursor.getString(1),cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6));
-                        arrayList.add(zamestnanci);
-
-                    }while (cursor.moveToNext());
-                    myDb.close();
-
-                    adapter = new RecyclerAdapter(arrayList);
-                    recyclerView.setAdapter(adapter);
-
-
-                    isInserted = false;
                 }
-                else
-                    Toast.makeText(MainActivity.this, "Not Inserted", Toast.LENGTH_LONG).show();
-
-
-
-                updateSpinner();
             }
 
         });

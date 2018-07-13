@@ -41,9 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="Zamestnanec: "
-            android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="Zamestnanec: "
             android:textColor="#000"
             android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,9 +54,9 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:layout_alignParentRight="true"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView2"
@@ -78,8 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="Dôvod: "
             android:textColor="#000"
             android:textSize="20dp"
@@ -90,10 +90,10 @@
             android:id="@+id/reasonSpinner"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView3"
@@ -115,8 +115,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="Doprava: "
             android:textColor="#000"
             android:textSize="20dp"
@@ -128,10 +128,10 @@
             android:id="@+id/transportSpinner"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView4"
@@ -142,24 +142,81 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#000"
+            android:paddingBottom="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/transportSpinner"
             tools:layout_height="10dp" />
 
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="Mód: "
+            android:textColor="#000"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/imageView6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <RadioButton
+            android:id="@+id/checkBox4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="left"
+            android:paddingTop="7dp"
+            android:text="Pridanie dát"
+            app:layout_constraintBottom_toTopOf="@+id/imageView6"
+            app:layout_constraintEnd_toStartOf="@+id/checkBox3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <RadioButton
+            android:id="@+id/checkBox3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="36dp"
+            android:gravity="right"
+            android:paddingTop="7dp"
+            android:text="Zobrazenie dát"
+            app:layout_constraintBottom_toTopOf="@+id/imageView6"
+            app:layout_constraintEnd_toEndOf="@+id/barrier16"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000"
+            android:paddingBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            tools:layout_height="10dp" />
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dbView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scrollbars="vertical"
-            android:paddingTop="10dp"
+            android:layout_marginTop="8dp"
             android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@+id/submitBtn"
             app:layout_constraintEnd_toEndOf="@+id/barrier9"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView6"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/submitBtn"
@@ -249,6 +306,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="left" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top" />
 
     </android.support.constraint.ConstraintLayout>
 
