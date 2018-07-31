@@ -494,7 +494,7 @@ public class MainActivity extends AppCompatActivity
                 else if(viewDataCheckbox.isChecked() && !addDataCheckBox.isChecked())
                 {
                     SQLiteDatabase db = myDb.getWritableDatabase();
-                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "' ORDER BY PRICHOD ASC", null);
+                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "' ORDER BY ID ASC", null);
                     if(viewDataCursor.getCount()>0)
                     {
                         recyclerView = (RecyclerView) findViewById(R.id.dbView);
