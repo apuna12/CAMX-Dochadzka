@@ -412,6 +412,7 @@ public class MainActivity extends AppCompatActivity
                     long diff = 0;
                     Date date;
                     Date date2;
+                    id = getLatestId("ID");
                     try {
                         date = curDateFormat.parse(datetimeString);
                         desiredDate = String.valueOf(date.getMonth());
@@ -425,11 +426,12 @@ public class MainActivity extends AppCompatActivity
 
                     } catch (Exception e) {
                     }
-                    id = getLatestId("ID");
+
                     String prichodGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
                     String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                     String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
                     String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
+                    //////////////upravit getData aby bralo ID...
                     if (prichodGetData == null && diffDays == 0) {
                         Cursor check = myDb.getDataByIDequalsOne();
                         if (id == 1 && check.getCount() == 0) //&& myDb.getAllData() == null)
@@ -492,7 +494,7 @@ public class MainActivity extends AppCompatActivity
                 else if(viewDataCheckbox.isChecked() && !addDataCheckBox.isChecked())
                 {
                     SQLiteDatabase db = myDb.getWritableDatabase();
-                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "'", null);
+                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "' ORDER BY PRICHOD ASC", null);
                     if(viewDataCursor.getCount()>0)
                     {
                         recyclerView = (RecyclerView) findViewById(R.id.dbView);
@@ -528,9 +530,7 @@ public class MainActivity extends AppCompatActivity
 
                         adapter = new RecyclerAdapter(arrayList);
                         recyclerView.setAdapter(adapter);
-                        return;
                     }
-
                 }
             }
 
@@ -543,6 +543,11 @@ public class MainActivity extends AppCompatActivity
     public String getData(String meno, String stlpec)
     {
         return myDb.getValue(meno, stlpec);
+    }
+
+    public String getDataWithID(int id, String meno, String stlpec)
+    {
+        return myDb.getValueWithID(id, meno, stlpec);
     }
 
     public void showMessage(String title, String message)

@@ -105,7 +105,26 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public String getValue(String meno , String stlpec)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("SELECT " + stlpec + " FROM " + TABLE_NAME + " WHERE MENO = '" + meno + "'" + " ORDER BY PRICHOD DESC LIMIT 1", null);
+        Cursor res = db.rawQuery("SELECT " + stlpec + " FROM " + TABLE_NAME + " WHERE MENO = '" + meno + "'" + " ORDER BY ID DESC LIMIT 1", null);
+        if(res.getCount()>0)
+        {
+            if (res != null) {
+                res.moveToFirst();
+                String result = res.getString(res.getColumnIndex(stlpec));
+                return result;
+            }
+        }
+        else
+        {
+            return null;
+        }
+        return null; // nemal by tu dojst
+    }
+
+    public String getValueWithID(int id, String meno , String stlpec)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT " + stlpec + " FROM " + TABLE_NAME + " WHERE MENO = '" + meno + "' AND ID=" + id + " ORDER BY ID DESC LIMIT 1", null);
         if(res.getCount()>0)
         {
             if (res != null) {
