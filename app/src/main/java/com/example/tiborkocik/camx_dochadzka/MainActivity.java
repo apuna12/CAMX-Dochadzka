@@ -292,17 +292,17 @@ public class MainActivity extends AppCompatActivity
             Log.i("Exception",e.toString());
         }
 
-        if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0)
+        if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
         {
             sItemsReason.setSelection(0);
         }
 
-        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED" ) == null && diffDays == 0)
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED" ) == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
         {
             sItemsReason.setSelection(1);
         }
 
-        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays == 0)
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
         {
             sItemsReason.setSelection(2);
         }
@@ -313,6 +313,11 @@ public class MainActivity extends AppCompatActivity
         }
 
         else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && diffDays == 0)
+        {
+            sItemsReason.setSelection(3);
+        }
+
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && diffDays == 0)
         {
             sItemsReason.setSelection(3);
         }
@@ -352,17 +357,17 @@ public class MainActivity extends AppCompatActivity
 
                 } catch (Exception e) {}
 
-                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0)
+                if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
                 {
                     sItemsReason.setSelection(0);
                 }
 
-                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && diffDays == 0)
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
                 {
                     sItemsReason.setSelection(1);
                 }
 
-                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays == 0)
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
                 {
                     sItemsReason.setSelection(2);
                 }
@@ -376,6 +381,12 @@ public class MainActivity extends AppCompatActivity
                 {
                     sItemsReason.setSelection(3);
                 }
+
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && diffDays == 0)
+                {
+                    sItemsReason.setSelection(3);
+                }
+
                 else
                 {
                     sItemsReason.setSelection(0);
@@ -442,18 +453,25 @@ public class MainActivity extends AppCompatActivity
                             id++;
                             isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                         }
+                    } else if (prichodGetData != null && odchodGetData != null) {
+                        Toast.makeText(MainActivity.this, "Záznam je už vyplnený", Toast.LENGTH_LONG).show();
                     } else if (prichodGetData != null && diffDays > 0) {
                         id++;
                         isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
-                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData == null) {
+                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData == null && sItemsReason.getSelectedItem().toString() == "Odchod na obed") {
                         id = myDb.getLatestID(menoGetData);
                         isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
-                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null) {
+                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null && sItemsReason.getSelectedItem().toString() == "Príchod z obeda") {
                         id = myDb.getLatestID(menoGetData);
                         isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
-                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null) {
+                    } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null && sItemsReason.getSelectedItem().toString() == "Odchod") {
                         id = myDb.getLatestID(menoGetData);
                         isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                    }
+                    else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && sItemsReason.getSelectedItem().toString() == "Odchod")
+                    {
+                        id = myDb.getLatestID(menoGetData);
+                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, null, null, datetimeString, sItemsTransport.getSelectedItem().toString());
                     }
 
 
@@ -486,7 +504,7 @@ public class MainActivity extends AppCompatActivity
 
                         isInserted = false;
                     } else
-                        Toast.makeText(MainActivity.this, "Not Inserted", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Záznam nepridaný alebo už bol vyplnený", Toast.LENGTH_LONG).show();
 
 
                     updateSpinner();
