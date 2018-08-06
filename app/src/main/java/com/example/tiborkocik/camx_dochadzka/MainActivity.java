@@ -453,8 +453,6 @@ public class MainActivity extends AppCompatActivity
                             id++;
                             isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                         }
-                    } else if (prichodGetData != null && odchodGetData != null) {
-                        Toast.makeText(MainActivity.this, "Záznam je už vyplnený", Toast.LENGTH_LONG).show();
                     } else if (prichodGetData != null && diffDays > 0) {
                         id++;
                         isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
