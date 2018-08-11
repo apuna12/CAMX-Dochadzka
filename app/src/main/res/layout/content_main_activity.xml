@@ -219,7 +219,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:text="5.8"
+            tools:text="5.8"
             app:layout_constraintBottom_toTopOf="@+id/dbView"
             app:layout_constraintEnd_toEndOf="@+id/barrier16"
             app:layout_constraintHorizontal_bias="0.029"

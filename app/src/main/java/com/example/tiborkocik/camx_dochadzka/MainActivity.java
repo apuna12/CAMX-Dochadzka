@@ -35,11 +35,15 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     List<String> spinnerName;
     List<String> spinnerReason;
     List<String> spinnerTransport;
-    TextView time, dovodTW, dopravaTW;
+    TextView time, dovodTW, dopravaTW, odpracovaneHod;
     DatabaseHelper myDb;
     Button submit;
     Spinner sItemsName, sItemsReason, sItemsTransport;
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity
 
         dovodTW = (TextView)findViewById(R.id.textView3);
         dopravaTW = (TextView)findViewById(R.id.textView4);
+        odpracovaneHod = (TextView)findViewById(R.id.textView7);
         addDataCheckBox = (RadioButton)findViewById(R.id.checkBox4);
         viewDataCheckbox = (RadioButton)findViewById(R.id.checkBox3);
         addDataCheckBox.setChecked(true);
@@ -442,10 +447,10 @@ public class MainActivity extends AppCompatActivity
                     String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                     String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
                     String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
-                    //////////////upravit getData aby bralo ID...
+                    // nocna praca: ak nie je dokonceny predosly zaznam updatni ho, inac pridaj novy
                     if (prichodGetData == null && diffDays == 0) {
                         Cursor check = myDb.getDataByIDequalsOne();
-                        if (id == 1 && check.getCount() == 0) //&& myDb.getAllData() == null)
+                        if (id == 1 && check.getCount() == 0)
                         {
                             isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                             id++;
@@ -454,8 +459,28 @@ public class MainActivity extends AppCompatActivity
                             isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
                         }
                     } else if (prichodGetData != null && diffDays > 0) {
-                        id++;
-                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        SQLiteDatabase db = myDb.getWritableDatabase();
+                        Cursor res = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO = '" + sItemsName.getSelectedItem().toString() + "'" + " ORDER BY ID DESC LIMIT 1", null);
+                        res.moveToFirst();
+                        if(res.getString(res.getColumnIndex("ODCHOD_NA_OBED")) == null) {
+                           id = myDb.getLatestID(menoGetData);
+                           isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
+                        }
+                        else if(res.getString(res.getColumnIndex("PRICHOD_Z_OBEDA")) == null)
+                        {
+                            id = myDb.getLatestID(menoGetData);
+                            isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
+                        }
+                        else if(res.getString(res.getColumnIndex("ODCHOD")) == null)
+                        {
+                            id = myDb.getLatestID(menoGetData);
+                            isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                        }
+                        else
+                        {
+                            id++;
+                            isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        }
                     } else if (prichodGetData != null && diffDays == 0 && odchObedGetData == null && sItemsReason.getSelectedItem().toString() == "Odchod na obed") {
                         id = myDb.getLatestID(menoGetData);
                         isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
@@ -465,9 +490,7 @@ public class MainActivity extends AppCompatActivity
                     } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null && sItemsReason.getSelectedItem().toString() == "Odchod") {
                         id = myDb.getLatestID(menoGetData);
                         isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
-                    }
-                    else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && sItemsReason.getSelectedItem().toString() == "Odchod")
-                    {
+                    } else if(prichodGetData != null && odchObedGetData == null && prichObedGetData == null && odchodGetData == null && diffDays == 0 && sItemsReason.getSelectedItem().toString() == "Odchod") {
                         id = myDb.getLatestID(menoGetData);
                         isInserted = myDb.updateData(id, menoGetData, prichodGetData, null, null, datetimeString, sItemsTransport.getSelectedItem().toString());
                     }
@@ -494,10 +517,24 @@ public class MainActivity extends AppCompatActivity
                             arrayList.add(zamestnanci);
 
                         } while (cursor.moveToNext());
+
+                        String workingTime;
+
+                        String newPrichData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
+                        if(newPrichData != null) {
+                            workingTime = substrTime(newPrichData);
+                            odpracovaneHod.setText(workingTime);
+                        }
+                        else
+                        {
+                            odpracovaneHod.setText("0,0");
+                        }
                         myDb.close();
 
                         adapter = new RecyclerAdapter(arrayList);
                         recyclerView.setAdapter(adapter);
+
+
 
 
                         isInserted = false;
@@ -573,6 +610,31 @@ public class MainActivity extends AppCompatActivity
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
+    }
+
+    public String substrTime(String prichTime)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+        Calendar c = Calendar.getInstance();
+        String actualTime, resTime;
+        actualTime = sdf.format(c.getTime());
+
+        Date date1 = null;
+        Date date2 = null;
+
+        try {
+            date1 = sdf.parse(prichTime);
+            date2 = sdf.parse(actualTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long resultTime = 0;
+        resultTime = date2.getTime() - date1.getTime();
+        int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
+        int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+        int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
+        minutes = minutes / 6;
+        return hours + "," + minutes;
     }
 
     public int getLatestId(String id)

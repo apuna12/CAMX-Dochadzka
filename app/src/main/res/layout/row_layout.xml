@@ -38,9 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="PRíCHOD"
+            android:text="PRÍCHOD"
             android:gravity="center_horizontal"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             />
         <ImageView
@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:text="ODCHOD NA OBED"
             android:gravity="center_horizontal"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             />
         <ImageView
@@ -68,7 +68,7 @@
             android:layout_weight="1"
             android:text="PRÍCHOD Z OBEDA"
             android:gravity="center_horizontal"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             />
         <ImageView
@@ -82,7 +82,7 @@
             android:layout_weight="1"
             android:text=" ODCHOD"
             android:gravity="center_horizontal"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             />
         <ImageView
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:text="POZNÁMKY"
             android:gravity="center_horizontal"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             />
 
