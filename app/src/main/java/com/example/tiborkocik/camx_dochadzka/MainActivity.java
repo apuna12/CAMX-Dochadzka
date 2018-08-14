@@ -327,6 +327,31 @@ public class MainActivity extends AppCompatActivity
             sItemsReason.setSelection(3);
         }
 
+        else if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays > 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+        {
+            sItemsReason.setSelection(0);
+        }
+
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED" ) == null && diffDays > 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+        {
+            sItemsReason.setSelection(1);
+        }
+
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays > 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+        {
+            sItemsReason.setSelection(2);
+        }
+
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && diffDays > 0)
+        {
+            sItemsReason.setSelection(3);
+        }
+
+        else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") == null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") != null && diffDays > 0)
+        {
+            sItemsReason.setSelection(3);
+        }
+
         else
         {
             sItemsReason.setSelection(0);
@@ -392,6 +417,26 @@ public class MainActivity extends AppCompatActivity
                     sItemsReason.setSelection(3);
                 }
 
+                else if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays > 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+                {
+                    sItemsReason.setSelection(0);
+                }
+
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED" ) == null && diffDays > 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+                {
+                    sItemsReason.setSelection(1);
+                }
+
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") == null && diffDays > 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
+                {
+                    sItemsReason.setSelection(2);
+                }
+
+                else if(getData(sItemsName.getSelectedItem().toString(), "PRICHOD") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED") != null && getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA") != null && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null && diffDays > 0)
+                {
+                    sItemsReason.setSelection(3);
+                }
+
                 else
                 {
                     sItemsReason.setSelection(0);
@@ -447,7 +492,6 @@ public class MainActivity extends AppCompatActivity
                     String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                     String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
                     String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
-                    // nocna praca: ak nie je dokonceny predosly zaznam updatni ho, inac pridaj novy
                     if (prichodGetData == null && diffDays == 0) {
                         Cursor check = myDb.getDataByIDequalsOne();
                         if (id == 1 && check.getCount() == 0)
