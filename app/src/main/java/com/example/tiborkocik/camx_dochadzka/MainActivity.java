@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //region Time
         time = (TextView)findViewById(R.id.timeText);
         Thread t = new Thread() {
 
@@ -121,8 +122,9 @@ public class MainActivity extends AppCompatActivity
 
         t.start();
 
+        //endregion
 
-
+        //region Mod
         dovodTW = (TextView)findViewById(R.id.textView3);
         dopravaTW = (TextView)findViewById(R.id.textView4);
         odpracovaneHod = (TextView)findViewById(R.id.textView7);
@@ -208,9 +210,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //endregion
 
-
-
+        //region Spinner adding
         spinnerName =  new ArrayList<String>();
         spinnerName.add("Martin Mrazko");
         spinnerName.add("Tomas Granat");
@@ -258,6 +260,8 @@ public class MainActivity extends AppCompatActivity
 
         submit = (Button)findViewById(R.id.submitBtn);
 
+        //endregion
+
 
         updateSpinner();
         AddData();
@@ -297,6 +301,7 @@ public class MainActivity extends AppCompatActivity
             Log.i("Exception",e.toString());
         }
 
+        //region conditions
         if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
         {
             sItemsReason.setSelection(0);
@@ -356,6 +361,7 @@ public class MainActivity extends AppCompatActivity
         {
             sItemsReason.setSelection(0);
         }
+        //endregion
 
         sItemsName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -386,6 +392,8 @@ public class MainActivity extends AppCompatActivity
                     diffDays = diff;
 
                 } catch (Exception e) {}
+
+                //region Conditions
 
                 if (getData(sItemsName.getSelectedItem().toString(), "PRICHOD") == null && diffDays == 0 && getData(sItemsName.getSelectedItem().toString(), "ODCHOD") == null)
                 {
@@ -441,6 +449,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     sItemsReason.setSelection(0);
                 }
+                //endregion
             }
 
             @Override
@@ -565,9 +574,14 @@ public class MainActivity extends AppCompatActivity
                         String workingTime;
 
                         String newPrichData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD");
+                        String newPrichzObeda = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
                         if(newPrichData != null) {
-                            workingTime = substrTime(newPrichData);
+                            workingTime = substrTime(newPrichData, sItemsName.getSelectedItem().toString());
                             odpracovaneHod.setText(workingTime);
+                        }
+                        else if(newPrichData != null)
+                        {
+
                         }
                         else
                         {
@@ -591,7 +605,7 @@ public class MainActivity extends AppCompatActivity
                 else if(viewDataCheckbox.isChecked() && !addDataCheckBox.isChecked())
                 {
                     SQLiteDatabase db = myDb.getWritableDatabase();
-                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "' ORDER BY ID ASC", null);
+                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + menoGetData + "' ORDER BY ID DESC", null);
                     if(viewDataCursor.getCount()>0)
                     {
                         recyclerView = (RecyclerView) findViewById(R.id.dbView);
@@ -656,29 +670,117 @@ public class MainActivity extends AppCompatActivity
         builder.show();
     }
 
-    public String substrTime(String prichTime)
+    public String substrTime(String prichTime, String name)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
         Calendar c = Calendar.getInstance();
-        String actualTime, resTime;
+        String actualTime;
         actualTime = sdf.format(c.getTime());
-
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        int id = getLatestId("ID");
+        Cursor data = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO = '" + sItemsName.getSelectedItem().toString() + "' AND ID = '" + id + "' ORDER BY ID DESC", null);
         Date date1 = null;
         Date date2 = null;
+        data.moveToFirst();
 
-        try {
-            date1 = sdf.parse(prichTime);
-            date2 = sdf.parse(actualTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if(data.getString(data.getColumnIndex("ODCHOD_NA_OBED")) != null && data.getString(data.getColumnIndex("PRICHOD_Z_OBEDA")) == null)
+        {
+            try
+            {
+                date1 = sdf.parse(prichTime);
+                date2 = sdf.parse(actualTime);
+            }
+            catch (ParseException e)
+            {
+                e.printStackTrace();
+            }
+            long resultTime = 0;
+            resultTime = date2.getTime() - date1.getTime();
+            int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+            int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
+            minutes = minutes / 6;
+            return hours + "," + minutes;
         }
-        long resultTime = 0;
-        resultTime = date2.getTime() - date1.getTime();
-        int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
-        int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
-        int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
-        minutes = minutes / 6;
-        return hours + "," + minutes;
+        else if(data.getString(data.getColumnIndex("PRICHOD_Z_OBEDA")) != null && data.getString(data.getColumnIndex("ODCHOD")) == null)
+        {
+            actualTime = data.getString(data.getColumnIndex("ODCHOD_NA_OBED"));
+            try
+            {
+                date1 = sdf.parse(prichTime);
+                date2 = sdf.parse(actualTime);
+            }
+            catch (ParseException e)
+            {
+                e.printStackTrace();
+            }
+            long resultTime = 0;
+            resultTime = date2.getTime() - date1.getTime();
+            int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+            int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
+            minutes = minutes / 6;
+            return hours + "," + minutes;
+        }
+        else if(data.getString(data.getColumnIndex("ODCHOD")) != null)
+        {
+            if(data.getString(data.getColumnIndex("ODCHOD_NA_OBED")) == null && data.getString(data.getColumnIndex("PRICHOD_Z_OBEDA")) == null)
+            {
+                try {
+                    date1 = sdf.parse(prichTime);
+                    date2 = sdf.parse(actualTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                long resultTime = 0;
+                resultTime = date2.getTime() - date1.getTime();
+                int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
+                int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+                int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
+                minutes = minutes / 6;
+                return hours + "," + minutes;
+            }
+            else
+            {
+                Date odchodnaobed = null, prichodzobeda = null;
+
+                try {
+                    date1 = sdf.parse(prichTime);
+                    date2 = sdf.parse(actualTime);
+                    odchodnaobed = sdf.parse(data.getString(data.getColumnIndex("ODCHOD_NA_OBED")));
+                    prichodzobeda = sdf.parse(data.getString(data.getColumnIndex("PRICHOD_Z_OBEDA")));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                long resultTime = 0;
+                long breakTime = prichodzobeda.getTime() - odchodnaobed.getTime();
+                resultTime = date2.getTime() - date1.getTime() - breakTime;
+                int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
+                int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+                int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
+                minutes = minutes / 6;
+                return hours + "," + minutes;
+            }
+        }
+        else
+        {
+            try
+            {
+                date1 = sdf.parse(prichTime);
+                date2 = sdf.parse(actualTime);
+            }
+            catch (ParseException e)
+            {
+                e.printStackTrace();
+            }
+            long resultTime = 0;
+            resultTime = date2.getTime() - date1.getTime();
+            int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+            int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
+            minutes = minutes / 6;
+            return hours + "," + minutes;
+        }
     }
 
     public int getLatestId(String id)
