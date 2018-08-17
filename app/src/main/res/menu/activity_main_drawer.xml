@@ -5,21 +5,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_addData"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="Zaznamenať dochádzku" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_viewData"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="Zobraziť dochádzku" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_updateData"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Upraviť dochádzku" />
     </group>
 
     <item android:title="Communicate">
