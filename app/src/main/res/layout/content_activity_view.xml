@@ -73,7 +73,7 @@
             app:layout_constraintBottom_toTopOf="@+id/imageViewView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textViewView2"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewView1" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewView1"/>
 
         <ImageView
             android:id="@+id/imageViewView2"
@@ -105,6 +105,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewView2" />
 
+        <EditText
+            android:id="@+id/editTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25-Jun-2018"
+            android:textColor="#000"
+            android:textSize="20dp"
+            android:editable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.853"
+            app:layout_constraintStart_toEndOf="@+id/textViewView3"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewView2"
+            app:layout_constraintVertical_bias="0.285" />
+
         <ImageView
             android:id="@+id/imageViewView3"
             android:layout_width="match_parent"
@@ -116,6 +131,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewView2"
             tools:layout_height="10dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dbView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewView3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="ODOSLAŤ"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dbView"
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 

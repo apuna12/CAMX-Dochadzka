@@ -26,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static final String COL_4 = "PRICHOD_Z_OBEDA";
     public static final String COL_5 = "ODCHOD";
     public static final String COL_6 = "POZNAMKA";
+    public static final String COL_ODPR = "HODINY";
 
 
     public DatabaseHelper(Context context) {
@@ -34,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT, " + COL_ODPR + " TEXT)");
     }
 
     @Override

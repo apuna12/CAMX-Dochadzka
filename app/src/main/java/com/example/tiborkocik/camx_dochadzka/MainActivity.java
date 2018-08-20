@@ -492,7 +492,7 @@ public class MainActivity extends AppCompatActivity
                     String odchObedGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD_NA_OBED");
                     String prichObedGetData = getData(sItemsName.getSelectedItem().toString(), "PRICHOD_Z_OBEDA");
                     String odchodGetData = getData(sItemsName.getSelectedItem().toString(), "ODCHOD");
-                    if (prichodGetData == null && diffDays == 0) {
+                    if (prichodGetData == null && diffDays == 0 && sItemsReason.getSelectedItem().toString() == "Príchod") {
                         Cursor check = myDb.getDataByIDequalsOne();
                         if (id == 1 && check.getCount() == 0)
                         {
@@ -506,16 +506,16 @@ public class MainActivity extends AppCompatActivity
                         SQLiteDatabase db = myDb.getWritableDatabase();
                         Cursor res = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO = '" + sItemsName.getSelectedItem().toString() + "'" + " ORDER BY ID DESC LIMIT 1", null);
                         res.moveToFirst();
-                        if(res.getString(res.getColumnIndex("ODCHOD_NA_OBED")) == null) {
+                        if(res.getString(res.getColumnIndex("ODCHOD_NA_OBED")) == null && sItemsReason.getSelectedItem().toString() == "Odchod na obed") {
                            id = myDb.getLatestID(menoGetData);
                            isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
                         }
-                        else if(res.getString(res.getColumnIndex("PRICHOD_Z_OBEDA")) == null)
+                        else if(res.getString(res.getColumnIndex("PRICHOD_Z_OBEDA")) == null && sItemsReason.getSelectedItem().toString() == "Príchod z obeda")
                         {
                             id = myDb.getLatestID(menoGetData);
                             isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
                         }
-                        else if(res.getString(res.getColumnIndex("ODCHOD")) == null)
+                        else if(res.getString(res.getColumnIndex("ODCHOD")) == null && sItemsReason.getSelectedItem().toString() == "Odchod")
                         {
                             id = myDb.getLatestID(menoGetData);
                             isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
@@ -569,10 +569,6 @@ public class MainActivity extends AppCompatActivity
                         if(newPrichData != null) {
                             workingTime = substrTime(newPrichData, sItemsName.getSelectedItem().toString());
                             odpracovaneHod.setText(workingTime);
-                        }
-                        else if(newPrichData != null)
-                        {
-
                         }
                         else
                         {
@@ -688,7 +684,7 @@ public class MainActivity extends AppCompatActivity
             long resultTime = 0;
             resultTime = date2.getTime() - date1.getTime();
             int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
-            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days) + days*24);
             int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
             minutes = minutes / 6;
             return hours + "," + minutes;
@@ -708,7 +704,7 @@ public class MainActivity extends AppCompatActivity
             long resultTime = 0;
             resultTime = date2.getTime() - date1.getTime();
             int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
-            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days) + days*24);
             int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
             minutes = minutes / 6;
             return hours + "," + minutes;
@@ -726,7 +722,7 @@ public class MainActivity extends AppCompatActivity
                 long resultTime = 0;
                 resultTime = date2.getTime() - date1.getTime();
                 int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
-                int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+                int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days) + days*24);
                 int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
                 minutes = minutes / 6;
                 return hours + "," + minutes;
@@ -747,7 +743,7 @@ public class MainActivity extends AppCompatActivity
                 long breakTime = prichodzobeda.getTime() - odchodnaobed.getTime();
                 resultTime = date2.getTime() - date1.getTime() - breakTime;
                 int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
-                int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+                int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days) + days*24);
                 int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
                 minutes = minutes / 6;
                 return hours + "," + minutes;
@@ -767,7 +763,7 @@ public class MainActivity extends AppCompatActivity
             long resultTime = 0;
             resultTime = date2.getTime() - date1.getTime();
             int days = (int) TimeUnit.MILLISECONDS.toDays(resultTime);
-            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days));
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(resultTime) - TimeUnit.DAYS.toHours(days) + days*24);
             int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(resultTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(resultTime)));
             minutes = minutes / 6;
             return hours + "," + minutes;
