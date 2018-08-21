@@ -256,8 +256,38 @@ public class MainActivity extends AppCompatActivity
 
         updateSpinner();
         AddData();
+
     }
 
+    public void cleardbView()
+    {
+        final Thread countdown = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(15000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                            odpracovaneHod.setText("");
+                            arrayList.clear();
+                            layoutManager = new LinearLayoutManager(MainActivity.this);
+                            adapter.notifyDataSetChanged();
+                            return;
+                            }
+                        });
+
+                } catch (InterruptedException e) {
+                }
+                return;
+            }
+        };
+        countdown.start();
+
+
+    }
 
     public void updateSpinner()
     {
@@ -581,7 +611,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
+                        cleardbView();
                         isInserted = false;
                     } else
                         Toast.makeText(MainActivity.this, "Záznam nepridaný alebo už bol vyplnený", Toast.LENGTH_LONG).show();

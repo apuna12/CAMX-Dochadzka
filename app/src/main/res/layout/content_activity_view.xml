@@ -59,7 +59,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageViewView1" />
 
         <Spinner
-            android:id="@+id/nameSpinner"
+            android:id="@+id/nameSpinnerView"
             android:layout_width="201dp"
             android:layout_height="23dp"
             android:layout_alignParentEnd="true"
@@ -147,6 +147,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageViewView3" />
 
         <Button
+            android:id="@+id/submitBtnView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
