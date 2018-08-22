@@ -28,11 +28,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 public class viewActivity extends AppCompatActivity
@@ -69,7 +72,7 @@ public class viewActivity extends AppCompatActivity
 
         fromDay = (EditText)findViewById(R.id.editTextView1);
         String myFormat = "dd-MM-yyyy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+        final SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         fromDay.setText(sdf.format(myCalendar.getTime()));
         myDb = new DatabaseHelper(this);
 
@@ -163,14 +166,33 @@ public class viewActivity extends AppCompatActivity
                     recyclerView.setHasFixedSize(true);
                     //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
                     viewDataCursor.moveToFirst();
+                    Date tableDate;
+                    Date givenDate;
                     do {
 
                         ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6));
-                        arrayList.add(zamestnanci);
+                        SimpleDateFormat dateComparer = new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                        try {
+                            givenDate = dateComparer.parse(fromDay.getText().toString());
+                            tableDate = dateFormat.parse(zamestnanci.getOdchod().toString());
+                            String tempDate = dateComparer.format(tableDate);
+                            tableDate = dateComparer.parse(tempDate);
+                            if (TimeUnit.MILLISECONDS.toMillis(tableDate.getTime())>=TimeUnit.MILLISECONDS.toMillis(givenDate.getTime()))
+                                arrayList.add(zamestnanci);
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
 
                     } while (viewDataCursor.moveToNext());
                     myDb.close();
 
+                    if(arrayList.size() == 0)
+                    {
+                        Toast.makeText(viewActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
+                    }
                     adapter = new RecyclerAdapter(arrayList);
                     recyclerView.setAdapter(adapter);
                 }
