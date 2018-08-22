@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     ArrayAdapter<String> adapterReason;
     ArrayAdapter<String> adapterTransport;
     ArrayAdapter<String> adapterTransportGray, adapterReasonGray;
-    boolean checker;
+    Thread countdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,41 +178,69 @@ public class MainActivity extends AppCompatActivity
 
     public void cleardbView()
     {
-        final Thread countdown = new Thread() {
+        if(countdown == null) {
+            countdown = new Thread() {
 
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(15000);
-                    if(checker == true)
-                    {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView = (RecyclerView) findViewById(R.id.dbView);
-                                odpracovaneHod.setText("");
-                                arrayList.clear();
-                                layoutManager = new LinearLayoutManager(MainActivity.this);
-                                adapter.notifyDataSetChanged();
-                                return;
-                            }
-                        });
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                        if (!Thread.interrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                                    odpracovaneHod.setText("");
+                                    arrayList.clear();
+                                    layoutManager = new LinearLayoutManager(MainActivity.this);
+                                    adapter.notifyDataSetChanged();
+                                    return;
+                                }
+                            });
+                        } else {
+                            return;
+                        }
+
+
+                    } catch (InterruptedException e) {
                     }
-                    else
-                    {
-                        return;
-                    }
-
-
-                } catch (InterruptedException e) {
+                    return;
                 }
-                return;
-            }
-        };
-        countdown.start();
+            };
+        }
+        else
+        {
+            countdown.interrupt();
+            countdown = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                        if (!Thread.interrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                                    odpracovaneHod.setText("");
+                                    arrayList.clear();
+                                    layoutManager = new LinearLayoutManager(MainActivity.this);
+                                    adapter.notifyDataSetChanged();
+                                    return;
+                                }
+                            });
+                        } else {
+                            return;
+                        }
 
 
-
+                    } catch (InterruptedException e) {
+                    }
+                    return;
+                }
+            };
+        }
+            countdown.start();
     }
 
     public void updateSpinner()
@@ -533,7 +561,7 @@ public class MainActivity extends AppCompatActivity
                     adapter = new RecyclerAdapter(arrayList);
                     recyclerView.setAdapter(adapter);
 
-                    
+
                     cleardbView();
                     isInserted = false;
                 } else

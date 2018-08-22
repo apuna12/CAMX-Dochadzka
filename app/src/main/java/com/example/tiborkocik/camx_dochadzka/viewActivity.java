@@ -51,6 +51,7 @@ public class viewActivity extends AppCompatActivity
     RecyclerView.Adapter adapter;
     Spinner sItemsName;
     List<String> spinnerName;
+    Thread countdown;
     final Calendar myCalendar = Calendar.getInstance();
 
     @Override
@@ -175,7 +176,7 @@ public class viewActivity extends AppCompatActivity
                         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
                         try {
                             givenDate = dateComparer.parse(fromDay.getText().toString());
-                            tableDate = dateFormat.parse(zamestnanci.getOdchod().toString());
+                            tableDate = dateFormat.parse(zamestnanci.getPrichod().toString());
                             String tempDate = dateComparer.format(tableDate);
                             tableDate = dateComparer.parse(tempDate);
                             if (TimeUnit.MILLISECONDS.toMillis(tableDate.getTime())>=TimeUnit.MILLISECONDS.toMillis(givenDate.getTime()))
@@ -195,7 +196,16 @@ public class viewActivity extends AppCompatActivity
                     }
                     adapter = new RecyclerAdapter(arrayList);
                     recyclerView.setAdapter(adapter);
+                    cleardbView();
                 }
+                else
+                {
+                    arrayList.clear();
+                    adapter = new RecyclerAdapter(arrayList);
+                    recyclerView.setAdapter(adapter);
+                    Toast.makeText(viewActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         //endregion
@@ -227,5 +237,71 @@ public class viewActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public void cleardbView()
+    {
+        if(countdown == null) {
+            countdown = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                        if (!Thread.interrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerView = (RecyclerView) findViewById(R.id.dbViewView);
+                                    arrayList.clear();
+                                    layoutManager = new LinearLayoutManager(viewActivity.this);
+                                    adapter.notifyDataSetChanged();
+                                    return;
+                                }
+                            });
+                        } else {
+                            return;
+                        }
+
+
+                    } catch (InterruptedException e) {
+                    }
+                    return;
+                }
+            };
+        }
+        else
+        {
+            countdown.interrupt();
+            countdown = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                        if (!Thread.interrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerView = (RecyclerView) findViewById(R.id.dbViewView);
+                                    arrayList.clear();
+                                    layoutManager = new LinearLayoutManager(viewActivity.this);
+                                    adapter.notifyDataSetChanged();
+                                    return;
+                                }
+                            });
+                        } else {
+                            return;
+                        }
+
+
+                    } catch (InterruptedException e) {
+                    }
+                    return;
+                }
+            };
+        }
+        countdown.start();
     }
 }
