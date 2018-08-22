@@ -2,11 +2,13 @@ package com.example.tiborkocik.camx_dochadzka;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,45 +79,16 @@ public class viewActivity extends AppCompatActivity
         spinnerName.add("Jakub Grega");
         spinnerName.add("Tibor Kocik");
 
+        sItemsName = (Spinner) findViewById(R.id.nameSpinnerView);
         ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
                 this, R.layout.spinner_layout, spinnerName);
         adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sItemsName = (Spinner) findViewById(R.id.nameSpinnerView);
         sItemsName.setAdapter(adapterName);
 
 
 
-        //region Submit btn
-        submit = (Button) findViewById(R.id.submitBtnView);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SQLiteDatabase db = myDb.getWritableDatabase();
-                Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "' ORDER BY ID DESC", null);
-                if(viewDataCursor.getCount()>0)
-                {
-                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
-                    arrayList.clear();
-                    layoutManager = new LinearLayoutManager(viewActivity.this);
 
-                    recyclerView.setLayoutManager(new GridLayoutManager(viewActivity.this, 1, GridLayoutManager.VERTICAL, false));
-                    recyclerView.setHasFixedSize(true);
-                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
-                    viewDataCursor.moveToFirst();
-                    do {
 
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6));
-                        arrayList.add(zamestnanci);
-
-                    } while (viewDataCursor.moveToNext());
-                    myDb.close();
-
-                    adapter = new RecyclerAdapter(arrayList);
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-        });
-        //endregion
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -168,6 +142,41 @@ public class viewActivity extends AppCompatActivity
         t.start();
 
         //endregion
+
+        //region Submit btn
+        submit = (Button) findViewById(R.id.submitBtnView);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabase db = myDb.getWritableDatabase();
+                Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "' ORDER BY ID DESC", null);
+                if(viewDataCursor.getCount()>0)
+                {
+                    recyclerView = (RecyclerView) findViewById(R.id.dbViewView);
+                    if(arrayList != null)
+                        arrayList.clear();
+                    else
+                        arrayList = new ArrayList();
+                    layoutManager = new LinearLayoutManager(viewActivity.this);
+
+                    recyclerView.setLayoutManager(new GridLayoutManager(viewActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                    recyclerView.setHasFixedSize(true);
+                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                    viewDataCursor.moveToFirst();
+                    do {
+
+                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6));
+                        arrayList.add(zamestnanci);
+
+                    } while (viewDataCursor.moveToNext());
+                    myDb.close();
+
+                    adapter = new RecyclerAdapter(arrayList);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+        });
+        //endregion
     }
 
     private void updateLabel() {
@@ -179,7 +188,22 @@ public class viewActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_addData) {
+            Intent intent = new Intent(viewActivity.this, MainActivity.class);
+            viewActivity.this.startActivity(intent);
+            finish();
+        } else if (id == R.id.nav_viewData) {
+
+        } else if (id == R.id.nav_updateData) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

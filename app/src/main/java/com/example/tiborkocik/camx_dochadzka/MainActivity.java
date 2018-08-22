@@ -869,7 +869,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_viewData) {
             Intent intent = new Intent(MainActivity.this, viewActivity.class);
             MainActivity.this.startActivity(intent);
-
+            finish();
         } else if (id == R.id.nav_updateData) {
 
         }
