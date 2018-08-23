@@ -602,12 +602,11 @@ public class MainActivity extends AppCompatActivity
         String actualTime;
         actualTime = sdf.format(c.getTime());
         SQLiteDatabase db = myDb.getWritableDatabase();
-        int id = getLatestId("ID");
+        int id = myDb.getLatestID(sItemsName.getSelectedItem().toString());
         Cursor data = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO = '" + sItemsName.getSelectedItem().toString() + "' AND ID = '" + id + "' ORDER BY ID DESC", null);
         Date date1 = null;
         Date date2 = null;
         data.moveToFirst();
-
         if(data.getString(data.getColumnIndex("ODCHOD_NA_OBED")) != null && data.getString(data.getColumnIndex("PRICHOD_Z_OBEDA")) == null)
         {
             try
