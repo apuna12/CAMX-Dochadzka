@@ -780,6 +780,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_updateData) {
 
         }
+        else if (id == R.id.nav_zamestnanci) {
+            Intent intent = new Intent(MainActivity.this, workersActivity.class);
+            MainActivity.this.startActivity(intent);
+            finish();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

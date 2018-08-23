@@ -1,57 +1,117 @@
 package com.example.tiborkocik.camx_dochadzka;
 
-import android.content.ContentValues;
-import android.content.Context;
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
-/**
- * Created by tibor.kocik on 11-May-18.
- */
+public class workersActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-public class workersActivity extends SQLiteOpenHelper{
-
-    public static final String DATABASE_NAME = "zamestnanci.db";
-    public static final String TABLE_NAME = "zamestnanci_tabulka";
-    public static final String COL_ID = "ID";
-    public static final String COL_1 = "MENO";
-    public static final String COL_2 = "OSOBNE_CISLO";
-    public static final String COL_3 = "TELEFON";
-
-    public workersActivity(Context context) {
-        super(context, DATABASE_NAME, null, 1);
-    }
+    TextView time;
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " TEXT, " + COL_3 + " TEXT)");
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_workers);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        //region Time
+
+        time = (TextView)findViewById(R.id.timeText);
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(500);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Calendar calendar = Calendar.getInstance();
+                                SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");
+
+                                Calendar c = Calendar.getInstance();
+                                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                                String formatDate = df.format(c.getTime());
+
+                                String strDate = mdformat.format(calendar.getTime()) + "   " + formatDate;
+                                time.setText(strDate);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        t.start();
+
+        //endregion
+
+
     }
+
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(sqLiteDatabase);
-    }
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-    public boolean insertData(int id, String meno, String osCislo, String telefon)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_ID, id);
-        contentValues.put(COL_1, meno);
-        contentValues.put(COL_2, osCislo);
-        contentValues.put(COL_3, telefon);
-        long res = db.insert(TABLE_NAME, null, contentValues);
-        if(res == -1)
-            return false;
-        else
-            return true;
-    }
+        if (id == R.id.nav_addData) {
+            Intent intent = new Intent(workersActivity.this, MainActivity.class);
+            workersActivity.this.startActivity(intent);
+            finish();
+        } else if (id == R.id.nav_viewData) {
+            Intent intent = new Intent(workersActivity.this, viewActivity.class);
+            workersActivity.this.startActivity(intent);
+            finish();
+        } else if (id == R.id.nav_updateData) {
 
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }

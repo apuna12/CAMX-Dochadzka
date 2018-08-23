@@ -232,6 +232,10 @@ public class viewActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_updateData) {
 
+        } else if (id == R.id.nav_zamestnanci) {
+            Intent intent = new Intent(viewActivity.this, workersActivity.class);
+            viewActivity.this.startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
