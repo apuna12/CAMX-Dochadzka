@@ -7,8 +7,9 @@ public class ZAMESTNANCI {
     private String prichod_z_obeda;
     private String odchod;
     private String poznamka;
+    private String hodiny;
 
-    public ZAMESTNANCI(String meno, String prichod, String odchod_na_obed, String prichod_z_obeda, String odchod, String poznamka)
+    public ZAMESTNANCI(String meno, String prichod, String odchod_na_obed, String prichod_z_obeda, String odchod, String poznamka, String hodiny)
     {
 
         this.setMeno(meno);
@@ -17,6 +18,7 @@ public class ZAMESTNANCI {
         this.setPrichod_z_obeda(prichod_z_obeda);
         this.setOdchod(odchod);
         this.setPoznamka(poznamka);
+        this.setHodiny(hodiny);
     }
 
     public String getMeno() {
@@ -66,4 +68,8 @@ public class ZAMESTNANCI {
     public void setPoznamka(String poznamka) {
         this.poznamka = poznamka;
     }
+
+    public String getHodiny() { return hodiny; }
+
+    public void setHodiny(String hodiny) { this.hodiny = hodiny; }
 }

@@ -39,6 +39,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.PrichObed.setText(zamestnanci.getPrichod_z_obeda());
         holder.odcho.setText(zamestnanci.getOdchod());
         holder.poznamka.setText(zamestnanci.getPoznamka());
+        holder.hodiny.setText(zamestnanci.getHodiny());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     public static  class RecyclerViewHolder extends  RecyclerView.ViewHolder
     {
-        TextView Name,Prich,OdchObed,PrichObed,odcho,poznamka;
+        TextView Name,Prich,OdchObed,PrichObed,odcho,poznamka,hodiny;
         LinearLayout header;
         ImageView headerTopLine, headerBottomLine;
         RecyclerViewHolder(View view)
@@ -63,6 +64,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             PrichObed = (TextView)view.findViewById(R.id.viewPrichodZObeda);
             odcho = (TextView)view.findViewById(R.id.viewOdchod);
             poznamka = (TextView)view.findViewById(R.id.viewPoznamka);
+            hodiny = (TextView)view.findViewById(R.id.viewHodiny);
 
         }
     }

@@ -99,6 +99,20 @@
             android:textSize="14dp"
             android:textStyle="bold"
             />
+        <ImageView
+            android:paddingTop="10dp"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#000"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="HODINY"
+            android:gravity="center_horizontal"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            />
 
     </LinearLayout>
 
@@ -197,6 +211,21 @@
             android:gravity="center_horizontal"
             android:textSize="10dp"
             android:id="@+id/viewPoznamka"
+            android:textStyle="bold"
+            />
+        <ImageView
+            android:paddingTop="10dp"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#000"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text=""
+            android:gravity="center_horizontal"
+            android:textSize="10dp"
+            android:id="@+id/viewHodiny"
             android:textStyle="bold"
             />
 

@@ -17,6 +17,8 @@ import java.io.OutputStream;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
+    Boolean newVersionChecker = false;
+
     public static final String DATABASE_NAME = "dochadzka.db";
     public static final String TABLE_NAME = "dochadzka_tabulka";
     public static final String COL_ID = "ID";
@@ -35,13 +37,35 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT, " + COL_ODPR + " TEXT)");
+        if(newVersionChecker==true)
+        {
+            sqLiteDatabase.execSQL("CREATE TABLE temporaryDB AS SELECT * FROM " + TABLE_NAME);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+            sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT, " + COL_ODPR + " TEXT)");
+            sqLiteDatabase.execSQL("INSERT INTO " + TABLE_NAME + " SELECT * FROM temporaryDB");
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS temporaryDB");
+            newVersionChecker = false;
+        }
+        else
+        {
+            sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY, " + COL_1 +" TEXT, " + COL_2 + " DATETIME, " + COL_3 + " DATETIME, " + COL_4 + " DATETIME, " + COL_5 + " DATETIME, " + COL_6 + " TEXT, " + COL_ODPR + " TEXT)");
+        }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(sqLiteDatabase);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+
+        if(newVersion>oldVersion)
+        {
+            newVersionChecker = true;
+            onCreate(sqLiteDatabase);
+        }
+        else
+        {
+
+            newVersionChecker = false;
+
+        }
     }
 
     public boolean insertData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
@@ -55,6 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(COL_4, prichObed);
         contentValues.put(COL_5, odchod);
         contentValues.put(COL_6, poznamka);
+        contentValues.put(COL_ODPR, 0.0);
         long res = db.insert(TABLE_NAME, null, contentValues);
         if(res == -1)
             return false;
@@ -98,8 +123,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         String sql = "UPDATE " + TABLE_NAME + " SET " + COL_2 + " = " + prichod + ", " + COL_3 + " = " + odchObed + ", " + COL_4 + " = " + prichObed + ", " + COL_5 + " = " + odchod + ", " + COL_6 + " = '" + poznamka + "' WHERE " + COL_ID + " = '" + id + "' AND " + COL_1 + " = '" + meno + "'";
         db.execSQL(sql);
-        //db.rawQuery("UPDATE " + TABLE_NAME + " SET " + COL_2 + " = " + prichod + ", " + COL_3 + " = " + odchObed + ", " + COL_4 + " = " + prichObed + ", " + COL_5 + " = " + odchod + ", " + COL_6 + " = " + poznamka + " WHERE " +  COL_ID + " = '" + id + "'");
-        //db.update(TABLE_NAME, contentValues, "MENO = ?", new String[] {meno});
         return true;
     }
 

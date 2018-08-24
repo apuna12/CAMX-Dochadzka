@@ -171,7 +171,7 @@ public class viewActivity extends AppCompatActivity
                     Date givenDate;
                     do {
 
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6));
+                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6), viewDataCursor.getString(7));
                         SimpleDateFormat dateComparer = new SimpleDateFormat("dd-MM-yyyy");
                         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
                         try {
@@ -200,9 +200,6 @@ public class viewActivity extends AppCompatActivity
                 }
                 else
                 {
-                    arrayList.clear();
-                    adapter = new RecyclerAdapter(arrayList);
-                    recyclerView.setAdapter(adapter);
                     Toast.makeText(viewActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
                 }
 
