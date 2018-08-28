@@ -118,7 +118,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageViewworkers2" />
 
         <EditText
-            android:id="@+id/editTextworkers"
+            android:id="@+id/editTextworkers1"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
@@ -161,7 +161,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageViewworkers3" />
 
         <EditText
-            android:id="@+id/editTextworkers1"
+            android:id="@+id/editTextworkers2"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"

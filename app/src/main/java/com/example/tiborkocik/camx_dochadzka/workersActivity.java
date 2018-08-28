@@ -36,6 +36,9 @@ public class workersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView time;
+    EditText name,surname,telephone;
+    Button button;
+    DatabaseWorkers workDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class workersActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        workDb = new DatabaseWorkers(this);
 
         //region Time
 
@@ -88,6 +91,46 @@ public class workersActivity extends AppCompatActivity
         t.start();
 
         //endregion
+
+        button = (Button) findViewById(R.id.submitBtnworkers);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                name = (EditText) findViewById(R.id.editTextworkers1);
+                surname = (EditText) findViewById(R.id.editTextworkers2);
+                telephone = (EditText) findViewById(R.id.editTextworkers3);
+                SQLiteDatabase sqLiteDatabase = workDb.getWritableDatabase();
+                Cursor allData = workDb.getAllData();
+                int id;
+                boolean isInserted=false;
+                allData.moveToFirst();
+                if(allData.getCount()>0)
+                {
+                    boolean checker = workDb.nameChecker(name.getText().toString(), surname.getText().toString());
+                    id = Integer.parseInt(workDb.getHighestValueOfId());
+
+                    if(checker == false)
+                    {
+                        id++;
+                        isInserted = workDb.insertData(id,name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
+                    }
+                    else
+                    {
+                        Toast.makeText(workersActivity.this, "Uvedené meno sa v databáze už nachádza", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else
+                {
+                    isInserted = workDb.insertData(1,name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
+                }
+
+                if(isInserted)
+                {
+                    Toast.makeText(workersActivity.this, "Zamestnanec pridaný", Toast.LENGTH_LONG).show();
+                }
+                workDb.close();
+            }
+        });
 
 
     }

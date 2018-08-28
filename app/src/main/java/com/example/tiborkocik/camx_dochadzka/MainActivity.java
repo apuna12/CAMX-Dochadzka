@@ -544,7 +544,6 @@ public class MainActivity extends AppCompatActivity
 
                     recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false));
                     recyclerView.setHasFixedSize(true);
-                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
                     cursor.moveToFirst();
                     do {
 
