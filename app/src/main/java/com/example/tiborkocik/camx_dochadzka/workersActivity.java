@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -39,6 +40,11 @@ public class workersActivity extends AppCompatActivity
     EditText name,surname,telephone;
     Button button;
     DatabaseWorkers workDb;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
+    ArrayList<ZOZNAM_ZAMESTNANCOV> arrayList = new ArrayList<>();;
+    Thread countdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class workersActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         workDb = new DatabaseWorkers(this);
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         //region Time
 
         time = (TextView)findViewById(R.id.timeText);
@@ -127,12 +133,109 @@ public class workersActivity extends AppCompatActivity
                 if(isInserted)
                 {
                     Toast.makeText(workersActivity.this, "Zamestnanec pridaný", Toast.LENGTH_LONG).show();
+                    Cursor cursor = workDb.getAllData();
+                    if (cursor.getCount() == 0) {
+                        Toast.makeText(workersActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    recyclerView = (RecyclerView) findViewById(R.id.dbViewworkers);
+                    arrayList.clear();
+                    layoutManager = new LinearLayoutManager(workersActivity.this);
+
+
+                    recyclerView.setLayoutManager(new GridLayoutManager(workersActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                    recyclerView.setHasFixedSize(true);
+                    cursor.moveToFirst();
+                    do {
+
+                        ZOZNAM_ZAMESTNANCOV zamestnanci = new ZOZNAM_ZAMESTNANCOV(cursor.getString(1), cursor.getString(2));
+                        arrayList.add(zamestnanci);
+
+                    } while (cursor.moveToNext());
+
+
+
+
+                    workDb.close();
+
+                    adapter = new RecyclerAdapter_ZOZNAM(arrayList);
+                    recyclerView.setAdapter(adapter);
+
+
+                    cleardbView();
                 }
-                workDb.close();
+
             }
         });
 
 
+    }
+
+
+    public void cleardbView()
+    {
+        if(countdown == null) {
+            countdown = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(60000);
+                        if (!Thread.interrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                                    arrayList.clear();
+                                    layoutManager = new LinearLayoutManager(workersActivity.this);
+                                    adapter.notifyDataSetChanged();
+                                    return;
+                                }
+                            });
+                        } else {
+                            return;
+                        }
+
+
+                    } catch (InterruptedException e) {
+                    }
+                    return;
+                }
+            };
+        }
+        else
+        {
+            countdown.interrupt();
+            countdown = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                        if (!Thread.interrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerView = (RecyclerView) findViewById(R.id.dbView);
+                                    arrayList.clear();
+                                    layoutManager = new LinearLayoutManager(workersActivity.this);
+                                    adapter.notifyDataSetChanged();
+                                    return;
+                                }
+                            });
+                        } else {
+                            return;
+                        }
+
+
+                    } catch (InterruptedException e) {
+                    }
+                    return;
+                }
+            };
+        }
+        countdown.start();
     }
 
 

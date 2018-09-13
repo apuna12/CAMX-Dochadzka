@@ -68,4 +68,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
