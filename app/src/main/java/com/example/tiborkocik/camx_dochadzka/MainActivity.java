@@ -1,12 +1,15 @@
 package com.example.tiborkocik.camx_dochadzka;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -120,12 +123,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        //region Spinner adding
-        spinnerName =  new ArrayList<String>();
-        spinnerName.add("Martin Mrazko");
-        spinnerName.add("Tomas Granat");
-        spinnerName.add("Jakub Grega");
-        spinnerName.add("Tibor Kocik");
+
+
 
         spinnerReason = new ArrayList<String>();
         spinnerReason.add("Príchod");
@@ -141,11 +140,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
-                this, R.layout.spinner_layout, spinnerName);
-        adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sItemsName = (Spinner) findViewById(R.id.nameSpinner);
-        sItemsName.setAdapter(adapterName);
+
 
 
         adapterReason = new ArrayAdapter<String>(
@@ -170,11 +165,59 @@ public class MainActivity extends AppCompatActivity
 
         //endregion
 
+        DatabaseWorkers workersDb = new DatabaseWorkers(this);
+        Cursor allWorkers = workersDb.getAllData();
 
-        updateSpinner();
-        AddData();
+
+        spinnerName =  new ArrayList<String>();
+        if(allWorkers.getCount()>0)
+        {
+            for (int i = 0; i < allWorkers.getCount(); i++) {
+                allWorkers.moveToPosition(i);
+                spinnerName.add(allWorkers.getString(allWorkers.getColumnIndex("MENO")));
+            }
+
+            ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
+                    this, R.layout.spinner_layout, spinnerName);
+            adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sItemsName = (Spinner) findViewById(R.id.nameSpinner);
+            sItemsName.setAdapter(adapterName);
+            updateSpinner();
+            AddData();
+        }
+        else
+        {
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage("V databáze sa nenachádzajú žiadny zamestnanci")
+                            .setPositiveButton("Pridať zamestnancov", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(MainActivity.this, workersActivity.class);
+                                    MainActivity.this.startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("Zrušiť", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Upozornenie")
+                            .show();
+                }
+            });
+
+        }
+
+
 
     }
+
 
     public void cleardbView()
     {
@@ -794,6 +837,11 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_zamestnanci) {
             Intent intent = new Intent(MainActivity.this, workersActivity.class);
+            MainActivity.this.startActivity(intent);
+            finish();
+        }
+        else if (id == R.id.nav_odobZamestnanca) {
+            Intent intent = new Intent(MainActivity.this, odobrzamesActivity.class);
             MainActivity.this.startActivity(intent);
             finish();
         }

@@ -33,6 +33,11 @@ public class RecyclerAdapter_ZOZNAM extends RecyclerView.Adapter<RecyclerAdapter
             holder.header.setVisibility(View.VISIBLE);
             holder.headerBottomLine.setVisibility(View.VISIBLE);
         }
+        else {
+            holder.headerTopLine.setVisibility(View.GONE);
+            holder.header.setVisibility(View.GONE);
+            holder.headerBottomLine.setVisibility(View.GONE);
+        }
         holder.Name.setText(zamestnanci.getMeno());
         holder.Number.setText(zamestnanci.getCislo());
     }
@@ -59,8 +64,5 @@ public class RecyclerAdapter_ZOZNAM extends RecyclerView.Adapter<RecyclerAdapter
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
+
 }

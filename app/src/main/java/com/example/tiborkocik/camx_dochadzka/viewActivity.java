@@ -2,6 +2,7 @@ package com.example.tiborkocik.camx_dochadzka;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,17 +79,10 @@ public class viewActivity extends AppCompatActivity
         fromDay.setText(sdf.format(myCalendar.getTime()));
         myDb = new DatabaseHelper(this);
 
-        spinnerName =  new ArrayList<String>();
-        spinnerName.add("Martin Mrazko");
-        spinnerName.add("Tomas Granat");
-        spinnerName.add("Jakub Grega");
-        spinnerName.add("Tibor Kocik");
 
-        sItemsName = (Spinner) findViewById(R.id.nameSpinnerView);
-        ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
-                this, R.layout.spinner_layout, spinnerName);
-        adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sItemsName.setAdapter(adapterName);
+
+
+
 
 
 
@@ -147,65 +142,117 @@ public class viewActivity extends AppCompatActivity
 
         //endregion
 
-        //region Submit btn
-        submit = (Button) findViewById(R.id.submitBtnView);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SQLiteDatabase db = myDb.getWritableDatabase();
-                Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "' ORDER BY ID DESC", null);
-                if(viewDataCursor.getCount()>0)
-                {
-                    recyclerView = (RecyclerView) findViewById(R.id.dbViewView);
-                    if(arrayList != null)
-                        arrayList.clear();
-                    else
-                        arrayList = new ArrayList();
-                    layoutManager = new LinearLayoutManager(viewActivity.this);
 
-                    recyclerView.setLayoutManager(new GridLayoutManager(viewActivity.this, 1, GridLayoutManager.VERTICAL, false));
-                    recyclerView.setHasFixedSize(true);
-                    //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
-                    viewDataCursor.moveToFirst();
-                    Date tableDate;
-                    Date givenDate;
-                    do {
+        DatabaseWorkers workersDb = new DatabaseWorkers(this);
+        Cursor allWorkers = workersDb.getAllData();
 
-                        ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6), viewDataCursor.getString(7));
-                        SimpleDateFormat dateComparer = new SimpleDateFormat("dd-MM-yyyy");
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
-                        try {
-                            givenDate = dateComparer.parse(fromDay.getText().toString());
-                            tableDate = dateFormat.parse(zamestnanci.getPrichod().toString());
-                            String tempDate = dateComparer.format(tableDate);
-                            tableDate = dateComparer.parse(tempDate);
-                            if (TimeUnit.MILLISECONDS.toMillis(tableDate.getTime())>=TimeUnit.MILLISECONDS.toMillis(givenDate.getTime()))
-                                arrayList.add(zamestnanci);
 
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+        spinnerName =  new ArrayList<String>();
+        if(allWorkers.getCount()>0)
+        {
+            for (int i = 0; i < allWorkers.getCount(); i++) {
+                allWorkers.moveToPosition(i);
+                spinnerName.add(allWorkers.getString(allWorkers.getColumnIndex("MENO")));
+            }
+
+            sItemsName = (Spinner) findViewById(R.id.nameSpinnerView);
+            ArrayAdapter<String> adapterName = new ArrayAdapter<String>(
+                    this, R.layout.spinner_layout, spinnerName);
+            adapterName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sItemsName.setAdapter(adapterName);
+            //region Submit btn
+            submit = (Button) findViewById(R.id.submitBtnView);
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SQLiteDatabase db = myDb.getWritableDatabase();
+                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "' ORDER BY ID DESC", null);
+                    if(viewDataCursor.getCount()>0)
+                    {
+                        recyclerView = (RecyclerView) findViewById(R.id.dbViewView);
+                        if(arrayList != null)
+                            arrayList.clear();
+                        else
+                            arrayList = new ArrayList();
+                        layoutManager = new LinearLayoutManager(viewActivity.this);
+
+                        recyclerView.setLayoutManager(new GridLayoutManager(viewActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                        recyclerView.setHasFixedSize(true);
+                        //SQLiteDatabase sqLiteDatabase = myDb.getReadableDatabase();
+                        viewDataCursor.moveToFirst();
+                        Date tableDate;
+                        Date givenDate;
+                        do {
+
+                            ZAMESTNANCI zamestnanci = new ZAMESTNANCI(viewDataCursor.getString(1), viewDataCursor.getString(2), viewDataCursor.getString(3), viewDataCursor.getString(4), viewDataCursor.getString(5), viewDataCursor.getString(6), viewDataCursor.getString(7));
+                            SimpleDateFormat dateComparer = new SimpleDateFormat("dd-MM-yyyy");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                            try {
+                                givenDate = dateComparer.parse(fromDay.getText().toString());
+                                tableDate = dateFormat.parse(zamestnanci.getPrichod().toString());
+                                String tempDate = dateComparer.format(tableDate);
+                                tableDate = dateComparer.parse(tempDate);
+                                if (TimeUnit.MILLISECONDS.toMillis(tableDate.getTime())>=TimeUnit.MILLISECONDS.toMillis(givenDate.getTime()))
+                                    arrayList.add(zamestnanci);
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        } while (viewDataCursor.moveToNext());
+                        myDb.close();
+
+                        if(arrayList.size() == 0)
+                        {
+                            Toast.makeText(viewActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
                         }
-
-
-                    } while (viewDataCursor.moveToNext());
-                    myDb.close();
-
-                    if(arrayList.size() == 0)
+                        adapter = new RecyclerAdapter(arrayList);
+                        recyclerView.setAdapter(adapter);
+                        cleardbView();
+                    }
+                    else
                     {
                         Toast.makeText(viewActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
                     }
-                    adapter = new RecyclerAdapter(arrayList);
-                    recyclerView.setAdapter(adapter);
-                    cleardbView();
-                }
-                else
-                {
-                    Toast.makeText(viewActivity.this, "Záznam nenájdený", Toast.LENGTH_LONG).show();
-                }
 
-            }
-        });
-        //endregion
+                }
+            });
+            //endregion
+        }
+
+        else
+        {
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(viewActivity.this);
+                    builder.setMessage("V databáze sa nenachádzajú žiadny zamestnanci")
+                            .setPositiveButton("Pridať zamestnancov", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(viewActivity.this, workersActivity.class);
+                                    viewActivity.this.startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("Zrušiť", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Upozornenie")
+                            .show();
+                }
+            });
+
+        }
+
+
+
+
     }
 
     private void updateLabel() {
@@ -231,6 +278,10 @@ public class viewActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_zamestnanci) {
             Intent intent = new Intent(viewActivity.this, workersActivity.class);
+            viewActivity.this.startActivity(intent);
+            finish();
+        } else if (id == R.id.nav_odobZamestnanca) {
+            Intent intent = new Intent(viewActivity.this, odobrzamesActivity.class);
             viewActivity.this.startActivity(intent);
             finish();
         }

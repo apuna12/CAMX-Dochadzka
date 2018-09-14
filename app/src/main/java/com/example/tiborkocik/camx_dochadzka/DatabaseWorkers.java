@@ -105,6 +105,8 @@ public class DatabaseWorkers extends SQLiteOpenHelper{
         return res;
     }
 
+
+
     public boolean insertData(int id, String name, String surname, String telephone)
     {
         SQLiteDatabase db = this.getWritableDatabase();

@@ -29,74 +29,15 @@
             tools:text="aaa" />
 
         <ImageView
-            android:id="@+id/imageViewworkers1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timeText"
-            tools:layout_height="10dp" />
-
-        <TextView
-            android:id="@+id/textViewworkers2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="Mod: "
-            android:textColor="#000"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/imageViewworkers2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewworkers1" />
-
-        <RadioButton
-            android:id="@+id/rbPridat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Pridať"
-            app:layout_constraintBottom_toTopOf="@+id/imageViewworkers2"
-            app:layout_constraintEnd_toStartOf="@+id/rbOdobrat"
-            app:layout_constraintHorizontal_bias="0.795"
-            app:layout_constraintStart_toEndOf="@+id/textViewworkers2"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewworkers1"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <RadioButton
-            android:id="@+id/rbOdobrat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Odobrať"
-            app:layout_constraintBottom_toTopOf="@+id/imageViewworkers2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewworkers1"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageView
             android:id="@+id/imageViewworkers2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="8dp"
             android:background="#000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewworkers1"
+            app:layout_constraintTop_toBottomOf="@+id/timeText"
             tools:layout_height="10dp" />
 
         <TextView

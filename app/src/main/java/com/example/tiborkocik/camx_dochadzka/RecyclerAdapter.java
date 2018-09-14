@@ -33,6 +33,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             holder.header.setVisibility(View.VISIBLE);
             holder.headerBottomLine.setVisibility(View.VISIBLE);
         }
+        else {
+            holder.headerTopLine.setVisibility(View.GONE);
+            holder.header.setVisibility(View.GONE);
+            holder.headerBottomLine.setVisibility(View.GONE);
+        }
         holder.Name.setText(zamestnanci.getMeno());
         holder.Prich.setText(zamestnanci.getPrichod());
         holder.OdchObed.setText(zamestnanci.getOdchod_na_obed());
@@ -69,8 +74,4 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
 }
