@@ -79,16 +79,6 @@ public class viewActivity extends AppCompatActivity
         fromDay.setText(sdf.format(myCalendar.getTime()));
         myDb = new DatabaseHelper(this);
 
-
-
-
-
-
-
-
-
-
-
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -148,6 +138,7 @@ public class viewActivity extends AppCompatActivity
 
 
         spinnerName =  new ArrayList<String>();
+        spinnerName.add("Všetko");
         if(allWorkers.getCount()>0)
         {
             for (int i = 0; i < allWorkers.getCount(); i++) {
@@ -166,7 +157,15 @@ public class viewActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     SQLiteDatabase db = myDb.getWritableDatabase();
-                    Cursor viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "' ORDER BY ID DESC", null);
+                    Cursor viewDataCursor;
+                    if(sItemsName.getSelectedItem().toString() == "Všetko")
+                    {
+                        viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " ORDER BY ID DESC", null);
+                    }
+                    else
+                    {
+                        viewDataCursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "' ORDER BY ID DESC", null);
+                    }
                     if(viewDataCursor.getCount()>0)
                     {
                         recyclerView = (RecyclerView) findViewById(R.id.dbViewView);
@@ -223,6 +222,7 @@ public class viewActivity extends AppCompatActivity
 
         else
         {
+            submit = (Button) findViewById(R.id.submitBtnView);
             submit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

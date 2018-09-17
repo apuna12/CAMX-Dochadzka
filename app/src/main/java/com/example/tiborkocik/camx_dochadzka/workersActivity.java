@@ -45,6 +45,7 @@ public class workersActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     ArrayList<ZOZNAM_ZAMESTNANCOV> arrayList = new ArrayList<>();;
     Thread countdown;
+    boolean isInserted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,34 +107,32 @@ public class workersActivity extends AppCompatActivity
                 surname = (EditText) findViewById(R.id.editTextworkers2);
                 telephone = (EditText) findViewById(R.id.editTextworkers3);
                 SQLiteDatabase sqLiteDatabase = workDb.getWritableDatabase();
-                Cursor allData = workDb.getAllData();
-                int id;
-                boolean isInserted=false;
-                allData.moveToFirst();
-                String regexNumber = "^[+]?[0-9]{10,14}$";
-                if(allData.getCount()>0)
+                if(name.getText().toString().isEmpty() || surname.getText().toString().isEmpty() || telephone.getText().toString().isEmpty())
                 {
-                    boolean checker = workDb.nameChecker(name.getText().toString(), surname.getText().toString());
-                    id = Integer.parseInt(workDb.getHighestValueOfId());
+                    Toast.makeText(workersActivity.this, "Nevyplnily ste niektorú z položiek", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Cursor allData = workDb.getAllData();
+                    int id;
+                    allData.moveToFirst();
+                    String regexNumber = "^[+]?[0-9]{10,14}$";
+                    if (allData.getCount() > 0) {
+                        boolean checker = workDb.nameChecker(name.getText().toString(), surname.getText().toString());
+                        id = Integer.parseInt(workDb.getHighestValueOfId());
 
-                    if(checker == false)
-                    {
-                        id++;
-                        if(telephone.getText().toString().matches(regexNumber))
-                            isInserted = workDb.insertData(id,name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
-                        else
-                            Toast.makeText(workersActivity.this, "Zadajte číslo v správnom tvare", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(workersActivity.this, "Uvedené meno sa v databáze už nachádza", Toast.LENGTH_LONG).show();
+                        if (checker == false) {
+                            id++;
+                            if (telephone.getText().toString().matches(regexNumber))
+                                isInserted = workDb.insertData(id, name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
+                            else
+                                Toast.makeText(workersActivity.this, "Zadajte číslo v správnom tvare", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(workersActivity.this, "Uvedené meno sa v databáze už nachádza", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        isInserted = workDb.insertData(1, name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
                     }
                 }
-                else
-                {
-                    isInserted = workDb.insertData(1,name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
-                }
-
                 if(isInserted)
                 {
                     Toast.makeText(workersActivity.this, "Zamestnanec pridaný", Toast.LENGTH_LONG).show();

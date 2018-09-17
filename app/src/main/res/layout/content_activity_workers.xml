@@ -187,14 +187,19 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dbViewworkers"
-            android:layout_width="368dp"
+            android:layout_width="match_parent"
             android:layout_height="141dp"
+            android:layout_marginBottom="44dp"
+            android:layout_marginTop="8dp"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/submitBtnworkers"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewworkers5" />
+            app:layout_constraintTop_toTopOf="@+id/timeText"
+            app:layout_constraintVertical_bias="1.0" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrier19"

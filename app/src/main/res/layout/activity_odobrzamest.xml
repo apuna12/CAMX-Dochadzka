@@ -9,7 +9,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/content_activity_view"
+        layout="@layout/content_activity_odobrzamest"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -50,7 +50,7 @@ public class odobrzamesActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     ArrayList<ZOZNAM_ZAMESTNANCOV> arrayList = new ArrayList<>();;
     Thread countdown;
-    Boolean isInserted;
+    Boolean isInserted = false;
     ArrayAdapter<String> adapterName;
 
     @Override
@@ -61,7 +61,7 @@ public class odobrzamesActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_odobrZam);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -125,7 +125,7 @@ public class odobrzamesActivity extends AppCompatActivity
         }
 
 
-        /*button = (Button) findViewById(R.id.submitBtnodobr);
+        button = (Button) findViewById(R.id.submitBtnodobr);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -133,16 +133,39 @@ public class odobrzamesActivity extends AppCompatActivity
 
                 if(allData.getCount()>0)
                 {
-                    Cursor checkName = db.rawQuery("SELECT * WHERE MENO='" + sItemsName.getSelectedItem().toString() + "'",null);
+                    Cursor checkName = db.rawQuery("SELECT * FROM " + DatabaseWorkers.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "'",null);
                     checkName.moveToFirst();
                     if(checkName.getCount()>0)
                     {
-                        db.execSQL("DELETE FROM " + DatabaseWorkers.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "'");
-                        isInserted = true;
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(odobrzamesActivity.this);
+                        builder.setMessage("Naozaj si prajete vymazať zamestnanca '" + sItemsName.getSelectedItem().toString() + "' z databázy?")
+                                .setPositiveButton("Áno", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        db.execSQL("DELETE FROM " + DatabaseWorkers.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "'");
+                                        isInserted = true;
+                                        Intent intent = new Intent(odobrzamesActivity.this, odobrzamesActivity.class);
+                                        odobrzamesActivity.this.startActivity(intent);
+                                        finish();
+                                        Toast.makeText(odobrzamesActivity.this, "Zamestnanec '" + sItemsName.getSelectedItem().toString() + "' bol z databázy vymazaný", Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .setNegativeButton("Zrušiť", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Upozornenie")
+                                .show();
+
                     }
                     else
                     {
-                        Toast.makeText(odobrzamesActivity.this,"Meno sa v databáze nenachádza",Toast.LENGTH_LONG);
+                        Toast.makeText(odobrzamesActivity.this,"Meno sa v databáze nenachádza",Toast.LENGTH_LONG).show();
                     }
                 }
                 else
@@ -170,7 +193,7 @@ public class odobrzamesActivity extends AppCompatActivity
 
                 if(isInserted)
                 {
-                    Toast.makeText(odobrzamesActivity.this,"Zamestnanec " + sItemsName.getSelectedItem().toString() + " bol z databázy odobratý",Toast.LENGTH_LONG);
+                    Toast.makeText(odobrzamesActivity.this,"Zamestnanec " + sItemsName.getSelectedItem().toString() + " bol z databázy odobratý",Toast.LENGTH_LONG).show();
                     spinnerName.clear();
                     for (int i = 0; i < allData.getCount(); i++) {
                         allData.moveToPosition(i);
@@ -181,7 +204,7 @@ public class odobrzamesActivity extends AppCompatActivity
                 }
 
             }
-        });*/
+        });
 
 
     }
