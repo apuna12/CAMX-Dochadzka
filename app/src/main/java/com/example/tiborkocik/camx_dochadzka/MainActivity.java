@@ -845,6 +845,11 @@ public class MainActivity extends AppCompatActivity
             MainActivity.this.startActivity(intent);
             finish();
         }
+        else if (id == R.id.nav_sendDB) {
+            Intent intent = new Intent(MainActivity.this, SendDBActivity.class);
+            MainActivity.this.startActivity(intent);
+            finish();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
