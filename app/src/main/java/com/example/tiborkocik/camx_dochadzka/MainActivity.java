@@ -1,25 +1,15 @@
 package com.example.tiborkocik.camx_dochadzka;
 
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,14 +22,11 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -195,7 +182,7 @@ public class MainActivity extends AppCompatActivity
                             .setPositiveButton("Pridať zamestnancov", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(MainActivity.this, workersActivity.class);
+                                    Intent intent = new Intent(MainActivity.this, WorkersActivity.class);
                                     MainActivity.this.startActivity(intent);
                                     finish();
                                 }
@@ -829,19 +816,19 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_addData) {
             // Handle the camera action
         } else if (id == R.id.nav_viewData) {
-            Intent intent = new Intent(MainActivity.this, viewActivity.class);
+            Intent intent = new Intent(MainActivity.this, ViewActivity.class);
             MainActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_updateData) {
 
         }
         else if (id == R.id.nav_zamestnanci) {
-            Intent intent = new Intent(MainActivity.this, workersActivity.class);
+            Intent intent = new Intent(MainActivity.this, WorkersActivity.class);
             MainActivity.this.startActivity(intent);
             finish();
         }
         else if (id == R.id.nav_odobZamestnanca) {
-            Intent intent = new Intent(MainActivity.this, odobrzamesActivity.class);
+            Intent intent = new Intent(MainActivity.this, OdobrzamesActivity.class);
             MainActivity.this.startActivity(intent);
             finish();
         }
@@ -850,7 +837,11 @@ public class MainActivity extends AppCompatActivity
             MainActivity.this.startActivity(intent);
             finish();
         }
-
+        else if (id == R.id.nav_importDB) {
+            Intent intent = new Intent(MainActivity.this, ImportDBActivity.class);
+            MainActivity.this.startActivity(intent);
+            finish();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

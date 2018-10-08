@@ -1,19 +1,16 @@
 package com.example.tiborkocik.camx_dochadzka;
 
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,21 +19,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class odobrzamesActivity extends AppCompatActivity
+public class OdobrzamesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView time;
@@ -139,17 +132,17 @@ public class odobrzamesActivity extends AppCompatActivity
                     {
 
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(odobrzamesActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OdobrzamesActivity.this);
                         builder.setMessage("Naozaj si prajete vymazať zamestnanca '" + sItemsName.getSelectedItem().toString() + "' z databázy?")
                                 .setPositiveButton("Áno", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         db.execSQL("DELETE FROM " + DatabaseWorkers.TABLE_NAME + " WHERE MENO='" + sItemsName.getSelectedItem().toString() + "'");
                                         isInserted = true;
-                                        Intent intent = new Intent(odobrzamesActivity.this, odobrzamesActivity.class);
-                                        odobrzamesActivity.this.startActivity(intent);
+                                        Intent intent = new Intent(OdobrzamesActivity.this, OdobrzamesActivity.class);
+                                        OdobrzamesActivity.this.startActivity(intent);
                                         finish();
-                                        Toast.makeText(odobrzamesActivity.this, "Zamestnanec '" + sItemsName.getSelectedItem().toString() + "' bol z databázy vymazaný", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(OdobrzamesActivity.this, "Zamestnanec '" + sItemsName.getSelectedItem().toString() + "' bol z databázy vymazaný", Toast.LENGTH_LONG).show();
                                     }
                                 })
                                 .setNegativeButton("Zrušiť", new DialogInterface.OnClickListener() {
@@ -165,18 +158,18 @@ public class odobrzamesActivity extends AppCompatActivity
                     }
                     else
                     {
-                        Toast.makeText(odobrzamesActivity.this,"Meno sa v databáze nenachádza",Toast.LENGTH_LONG).show();
+                        Toast.makeText(OdobrzamesActivity.this,"Meno sa v databáze nenachádza",Toast.LENGTH_LONG).show();
                     }
                 }
                 else
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(odobrzamesActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OdobrzamesActivity.this);
                     builder.setMessage("V databáze sa nenachádzajú žiadny zamestnanci")
                             .setPositiveButton("Pridať zamestnancov", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(odobrzamesActivity.this, workersActivity.class);
-                                    odobrzamesActivity.this.startActivity(intent);
+                                    Intent intent = new Intent(OdobrzamesActivity.this, WorkersActivity.class);
+                                    OdobrzamesActivity.this.startActivity(intent);
                                     finish();
                                 }
                             })
@@ -193,7 +186,7 @@ public class odobrzamesActivity extends AppCompatActivity
 
                 if(isInserted)
                 {
-                    Toast.makeText(odobrzamesActivity.this,"Zamestnanec " + sItemsName.getSelectedItem().toString() + " bol z databázy odobratý",Toast.LENGTH_LONG).show();
+                    Toast.makeText(OdobrzamesActivity.this,"Zamestnanec " + sItemsName.getSelectedItem().toString() + " bol z databázy odobratý",Toast.LENGTH_LONG).show();
                     spinnerName.clear();
                     for (int i = 0; i < allData.getCount(); i++) {
                         allData.moveToPosition(i);
@@ -225,7 +218,7 @@ public class odobrzamesActivity extends AppCompatActivity
                                 public void run() {
                                     recyclerView = (RecyclerView) findViewById(R.id.dbView);
                                     arrayList.clear();
-                                    layoutManager = new LinearLayoutManager(odobrzamesActivity.this);
+                                    layoutManager = new LinearLayoutManager(OdobrzamesActivity.this);
                                     adapter.notifyDataSetChanged();
                                     return;
                                 }
@@ -256,7 +249,7 @@ public class odobrzamesActivity extends AppCompatActivity
                                 public void run() {
                                     recyclerView = (RecyclerView) findViewById(R.id.dbView);
                                     arrayList.clear();
-                                    layoutManager = new LinearLayoutManager(odobrzamesActivity.this);
+                                    layoutManager = new LinearLayoutManager(OdobrzamesActivity.this);
                                     adapter.notifyDataSetChanged();
                                     return;
                                 }
@@ -282,21 +275,25 @@ public class odobrzamesActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_addData) {
-            Intent intent = new Intent(odobrzamesActivity.this, MainActivity.class);
-            odobrzamesActivity.this.startActivity(intent);
+            Intent intent = new Intent(OdobrzamesActivity.this, MainActivity.class);
+            OdobrzamesActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_viewData) {
-            Intent intent = new Intent(odobrzamesActivity.this, viewActivity.class);
-            odobrzamesActivity.this.startActivity(intent);
+            Intent intent = new Intent(OdobrzamesActivity.this, ViewActivity.class);
+            OdobrzamesActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_updateData) {
 
         } else if (id == R.id.nav_zamestnanci) {
-            Intent intent = new Intent(odobrzamesActivity.this, workersActivity.class);
-            odobrzamesActivity.this.startActivity(intent);
+            Intent intent = new Intent(OdobrzamesActivity.this, WorkersActivity.class);
+            OdobrzamesActivity.this.startActivity(intent);
             finish();
         }
-
+        else if (id == R.id.nav_importDB) {
+            Intent intent = new Intent(OdobrzamesActivity.this, ImportDBActivity.class);
+            OdobrzamesActivity.this.startActivity(intent);
+            finish();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

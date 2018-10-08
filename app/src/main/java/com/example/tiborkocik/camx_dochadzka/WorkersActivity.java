@@ -1,11 +1,9 @@
 package com.example.tiborkocik.camx_dochadzka;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,22 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
-public class workersActivity extends AppCompatActivity
+public class WorkersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView time;
@@ -109,7 +101,7 @@ public class workersActivity extends AppCompatActivity
                 SQLiteDatabase sqLiteDatabase = workDb.getWritableDatabase();
                 if(name.getText().toString().isEmpty() || surname.getText().toString().isEmpty() || telephone.getText().toString().isEmpty())
                 {
-                    Toast.makeText(workersActivity.this, "Nevyplnily ste niektorú z položiek", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WorkersActivity.this, "Nevyplnily ste niektorú z položiek", Toast.LENGTH_LONG).show();
                 }
                 else {
                     Cursor allData = workDb.getAllData();
@@ -125,9 +117,9 @@ public class workersActivity extends AppCompatActivity
                             if (telephone.getText().toString().matches(regexNumber))
                                 isInserted = workDb.insertData(id, name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
                             else
-                                Toast.makeText(workersActivity.this, "Zadajte číslo v správnom tvare", Toast.LENGTH_LONG).show();
+                                Toast.makeText(WorkersActivity.this, "Zadajte číslo v správnom tvare", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(workersActivity.this, "Uvedené meno sa v databáze už nachádza", Toast.LENGTH_LONG).show();
+                            Toast.makeText(WorkersActivity.this, "Uvedené meno sa v databáze už nachádza", Toast.LENGTH_LONG).show();
                         }
                     } else {
                         isInserted = workDb.insertData(1, name.getText().toString(), surname.getText().toString(), telephone.getText().toString());
@@ -135,19 +127,19 @@ public class workersActivity extends AppCompatActivity
                 }
                 if(isInserted)
                 {
-                    Toast.makeText(workersActivity.this, "Zamestnanec pridaný", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WorkersActivity.this, "Zamestnanec pridaný", Toast.LENGTH_LONG).show();
                     Cursor cursor = workDb.getAllData();
                     if (cursor.getCount() == 0) {
-                        Toast.makeText(workersActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(WorkersActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
                         return;
                     }
 
                     recyclerView = (RecyclerView) findViewById(R.id.dbViewworkers);
                     arrayList.clear();
-                    layoutManager = new LinearLayoutManager(workersActivity.this);
+                    layoutManager = new LinearLayoutManager(WorkersActivity.this);
 
 
-                    recyclerView.setLayoutManager(new GridLayoutManager(workersActivity.this, 1, GridLayoutManager.VERTICAL, false));
+                    recyclerView.setLayoutManager(new GridLayoutManager(WorkersActivity.this, 1, GridLayoutManager.VERTICAL, false));
                     recyclerView.setHasFixedSize(true);
                     cursor.moveToFirst();
                     do {
@@ -191,7 +183,7 @@ public class workersActivity extends AppCompatActivity
                                 public void run() {
                                     recyclerView = (RecyclerView) findViewById(R.id.dbView);
                                     arrayList.clear();
-                                    layoutManager = new LinearLayoutManager(workersActivity.this);
+                                    layoutManager = new LinearLayoutManager(WorkersActivity.this);
                                     adapter.notifyDataSetChanged();
                                     return;
                                 }
@@ -222,7 +214,7 @@ public class workersActivity extends AppCompatActivity
                                 public void run() {
                                     recyclerView = (RecyclerView) findViewById(R.id.dbView);
                                     arrayList.clear();
-                                    layoutManager = new LinearLayoutManager(workersActivity.this);
+                                    layoutManager = new LinearLayoutManager(WorkersActivity.this);
                                     adapter.notifyDataSetChanged();
                                     return;
                                 }
@@ -248,26 +240,30 @@ public class workersActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_addData) {
-            Intent intent = new Intent(workersActivity.this, MainActivity.class);
-            workersActivity.this.startActivity(intent);
+            Intent intent = new Intent(WorkersActivity.this, MainActivity.class);
+            WorkersActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_viewData) {
-            Intent intent = new Intent(workersActivity.this, viewActivity.class);
-            workersActivity.this.startActivity(intent);
+            Intent intent = new Intent(WorkersActivity.this, ViewActivity.class);
+            WorkersActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_updateData) {
 
         } else if (id == R.id.nav_odobZamestnanca) {
-            Intent intent = new Intent(workersActivity.this, odobrzamesActivity.class);
-            workersActivity.this.startActivity(intent);
+            Intent intent = new Intent(WorkersActivity.this, OdobrzamesActivity.class);
+            WorkersActivity.this.startActivity(intent);
             finish();
         }
         else if (id == R.id.nav_zamestnanci) {
-            Intent intent = new Intent(workersActivity.this, workersActivity.class);
-            workersActivity.this.startActivity(intent);
+            Intent intent = new Intent(WorkersActivity.this, WorkersActivity.class);
+            WorkersActivity.this.startActivity(intent);
             finish();
         }
-
+        else if (id == R.id.nav_importDB) {
+            Intent intent = new Intent(WorkersActivity.this, ImportDBActivity.class);
+            WorkersActivity.this.startActivity(intent);
+            finish();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

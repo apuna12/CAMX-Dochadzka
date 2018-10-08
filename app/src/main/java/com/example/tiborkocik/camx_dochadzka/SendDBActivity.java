@@ -8,9 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,21 +19,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.security.Permission;
-import java.security.Permissions;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 
 public class SendDBActivity extends AppCompatActivity
@@ -142,23 +134,27 @@ public class SendDBActivity extends AppCompatActivity
             SendDBActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_viewData) {
-            Intent intent = new Intent(SendDBActivity.this, viewActivity.class);
+            Intent intent = new Intent(SendDBActivity.this, ViewActivity.class);
             SendDBActivity.this.startActivity(intent);
             finish();
         } else if (id == R.id.nav_updateData) {
 
         }
         else if (id == R.id.nav_zamestnanci) {
-            Intent intent = new Intent(SendDBActivity.this, workersActivity.class);
+            Intent intent = new Intent(SendDBActivity.this, WorkersActivity.class);
             SendDBActivity.this.startActivity(intent);
             finish();
         }
         else if (id == R.id.nav_odobZamestnanca) {
-            Intent intent = new Intent(SendDBActivity.this, odobrzamesActivity.class);
+            Intent intent = new Intent(SendDBActivity.this, OdobrzamesActivity.class);
             SendDBActivity.this.startActivity(intent);
             finish();
         }
-
+        else if (id == R.id.nav_importDB) {
+            Intent intent = new Intent(SendDBActivity.this, ImportDBActivity.class);
+            SendDBActivity.this.startActivity(intent);
+            finish();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
