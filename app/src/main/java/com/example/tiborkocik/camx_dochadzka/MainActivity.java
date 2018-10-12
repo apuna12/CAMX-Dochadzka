@@ -508,11 +508,11 @@ public class MainActivity extends AppCompatActivity
                     Cursor check = myDb.getDataByIDequalsOne();
                     if (id == 1 && check.getCount() == 0)
                     {
-                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString(),"0");
                         id++;
                     } else {
                         id++;
-                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString(),"0");
                     }
                     aktualizeHours();
                 } else if (prichodGetData != null && diffDays > 0) {
@@ -521,39 +521,39 @@ public class MainActivity extends AppCompatActivity
                     res.moveToFirst();
                     if(res.getString(res.getColumnIndex("ODCHOD_NA_OBED")) == null && sItemsReason.getSelectedItem().toString() == "Odchod na obed") {
                        id = myDb.getLatestID(menoGetData);
-                       isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
+                       isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString(),"0");
                     }
                     else if(res.getString(res.getColumnIndex("PRICHOD_Z_OBEDA")) == null && sItemsReason.getSelectedItem().toString() == "Príchod z obeda")
                     {
                         id = myDb.getLatestID(menoGetData);
-                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
+                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString(),"0");
                     }
                     else if(res.getString(res.getColumnIndex("ODCHOD")) == null && sItemsReason.getSelectedItem().toString() == "Odchod")
                     {
                         id = myDb.getLatestID(menoGetData);
-                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                        isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString(),"0");
                     }
                     else
                     {
                         id++;
-                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString());
+                        isInserted = myDb.insertData(id, menoGetData, datetimeString, null, null, null, sItemsTransport.getSelectedItem().toString(),"0");
                     }
                     aktualizeHours();
                 } else if (prichodGetData != null && diffDays == 0 && odchObedGetData == null && sItemsReason.getSelectedItem().toString() == "Odchod na obed") {
                     id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, datetimeString, null, null, sItemsTransport.getSelectedItem().toString(),"0");
                     aktualizeHours();
                 } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData == null && sItemsReason.getSelectedItem().toString() == "Príchod z obeda") {
                     id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, datetimeString, null, sItemsTransport.getSelectedItem().toString(),"0");
                     aktualizeHours();
                 } else if (prichodGetData != null && diffDays == 0 && odchObedGetData != null && prichObedGetData != null && odchodGetData == null && sItemsReason.getSelectedItem().toString() == "Odchod") {
                     id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, odchObedGetData, prichObedGetData, datetimeString, sItemsTransport.getSelectedItem().toString(),"0");
                     aktualizeHours();
                 } else if(prichodGetData != null && odchObedGetData == null && prichObedGetData == null && odchodGetData == null && diffDays == 0 && sItemsReason.getSelectedItem().toString() == "Odchod") {
                     id = myDb.getLatestID(menoGetData);
-                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, null, null, datetimeString, sItemsTransport.getSelectedItem().toString());
+                    isInserted = myDb.updateData(id, menoGetData, prichodGetData, null, null, datetimeString, sItemsTransport.getSelectedItem().toString(),"0");
                     aktualizeHours();
                 }
 

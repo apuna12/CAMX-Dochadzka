@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -31,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,6 +58,7 @@ public class ImportDBActivity extends AppCompatActivity
     InputStream is;
     String path;
     String filePath;
+    final int SELECT_FOLDER = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,9 +132,10 @@ public class ImportDBActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                uri = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath());
                 intent.setDataAndType(uri, "text/csv");
-                startActivity(Intent.createChooser(intent, "Select the file"));
+                startActivityForResult(Intent.createChooser(intent, "Select the file"),
+                        SELECT_FOLDER);
+
 
             }
         });
@@ -145,7 +149,7 @@ public class ImportDBActivity extends AppCompatActivity
 
 
 
-                    file = new File(uri.getPath());
+                    file = new File(filePath);
                     if(file != null) {
                         try {
                             DatabaseHelper helper = new DatabaseHelper(ImportDBActivity.this);
@@ -155,19 +159,81 @@ public class ImportDBActivity extends AppCompatActivity
                             ContentValues contentValues = new ContentValues();
                             String line = "";
                             String tableName = "dochadzka_tabulka";
-                            db.beginTransaction();
-                            while ((line = br.readLine()) != null) {
-                                String[] str = line.split("\t");
+                            ArrayList<String> inner = new ArrayList<String>();
+                            ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+                            StringBuilder sb = new StringBuilder();
 
-                                contentValues.put("ID", str[0]);
-                                contentValues.put("MENO", str[1]);
-                                contentValues.put("PRICHOD", str[2]);
-                                contentValues.put("ODCHOD_NA_OBED", str[3]);
-                                contentValues.put("PRICHOD_Z_OBEDA", str[4]);
-                                contentValues.put("ODCHOD", str[5]);
-                                contentValues.put("POZNAMKA", str[6]);
-                                contentValues.put("HODINY", str[0]);
-                                db.insert(tableName,null,contentValues);
+                            db.beginTransaction();
+                            int checker = 0; //urobit to tak ako cvicenia z javy... arraylist arraylistu
+                            while ((line = br.readLine()) != null) {
+                                for (int i = 0; i < line.length(); i++)
+                                {
+
+                                    if (line.charAt(i) != ',') {
+                                        if (line.charAt(i) != '"') {
+                                            sb.append(line.charAt(i));
+                                        }
+
+                                    } else {
+                                        inner.add(sb.toString());
+                                        sb = new StringBuilder();
+                                    }
+                                    if(i == line.length()-1)
+                                    {
+                                        inner.add(sb.toString());
+                                        sb = new StringBuilder();
+                                    }
+                                }
+
+                                data.add(inner);
+                                inner = new ArrayList<String>();
+                            }
+                            ArrayList<ArrayList<String>> unitedData = new ArrayList<ArrayList<String>>();
+                            ArrayList<String> rowData = new ArrayList<>();
+
+                            for (int i = 0; i < data.size(); i++) {
+                                for (int j = 0; j < data.get(0).size(); j++) {
+                                    if(i != 0)
+                                    {
+                                        if(j == 1)
+                                        {
+                                            sb = new StringBuilder();
+                                            sb.append(data.get(i).get(j) + "," + data.get(i).get(j+1));
+                                            rowData.add(sb.toString());
+                                            ++j;
+                                        }
+                                        else
+                                        {
+                                            if(j == 0)
+                                                rowData.add(data.get(i).get(j));
+                                            else if(j==data.get(0).size()-1) {
+                                                rowData.add(data.get(i).get(j));
+                                                rowData.add(data.get(i).get(j+1));
+                                            }
+                                            else
+                                                rowData.add(data.get(i).get(j));
+                                        }
+                                        /*if(j == data.get(0).size()-1)
+                                        {
+                                            rowData.add(data.get(i).get(j));
+                                        }*/
+                                    }
+                                    else
+                                    {
+                                        rowData.add(data.get(0).get(j));
+                                    }
+
+
+                                }
+                                unitedData.add(rowData);
+                                rowData = new ArrayList<>();
+                            }
+                            for (int i = 1; i < unitedData.size(); i++) {
+                                boolean check = helper.insertData(Integer.parseInt(unitedData.get(i).get(0)), unitedData.get(i).get(1).toString(), unitedData.get(i).get(2).toString(), unitedData.get(i).get(3).toString(), unitedData.get(i).get(4).toString(), unitedData.get(i).get(5).toString(), unitedData.get(i).get(6).toString(), unitedData.get(i).get(7).toString());
+                                if(!check) {
+                                    Toast.makeText(ImportDBActivity.this, "Niekde nastala chyba", Toast.LENGTH_LONG).show();
+                                    break;
+                                }
                             }
                             db.setTransactionSuccessful();
                             db.endTransaction();
@@ -189,16 +255,27 @@ public class ImportDBActivity extends AppCompatActivity
         });
     }
 
-    private String getRealPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this, uri, projection, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
-        int column = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column);
-        cursor.close();
-        return result;
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case SELECT_FOLDER:
+                if(requestCode == 1 && data != null)
+                {
+                    uri = data.getData();
+                    filePath = W_FilePathUtil.getPath(this, uri);
+
+                }
+                break;
+            default:
+                break;
+        }
     }
+
+
 
 
     @Override

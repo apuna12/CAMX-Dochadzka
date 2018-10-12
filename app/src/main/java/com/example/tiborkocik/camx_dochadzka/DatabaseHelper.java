@@ -68,7 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
     }
 
-    public boolean insertData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
+    public boolean insertData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka, String hodiny)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -79,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(COL_4, prichObed);
         contentValues.put(COL_5, odchod);
         contentValues.put(COL_6, poznamka);
-        contentValues.put(COL_ODPR, 0.0);
+        contentValues.put(COL_ODPR, hodiny);
         long res = db.insert(TABLE_NAME, null, contentValues);
         if(res == -1)
             return false;
@@ -102,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return  res;
     }
 
-    public Boolean updateData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka)
+    public Boolean updateData(int id, String meno, String prichod, String odchObed, String prichObed, String odchod, String poznamka, String hodiny)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -112,6 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(COL_4, prichObed);
         contentValues.put(COL_5, odchod);
         contentValues.put(COL_6, poznamka);
+        contentValues.put(COL_ODPR, hodiny);
         if(prichod != null)
             prichod = "'" + prichod + "'";
         if(odchObed != null)
@@ -121,7 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         if(odchod != null)
             odchod = "'" + odchod + "'";
 
-        String sql = "UPDATE " + TABLE_NAME + " SET " + COL_2 + " = " + prichod + ", " + COL_3 + " = " + odchObed + ", " + COL_4 + " = " + prichObed + ", " + COL_5 + " = " + odchod + ", " + COL_6 + " = '" + poznamka + "' WHERE " + COL_ID + " = '" + id + "' AND " + COL_1 + " = '" + meno + "'";
+        String sql = "UPDATE " + TABLE_NAME + " SET " + COL_2 + " = " + prichod + ", " + COL_3 + " = " + odchObed + ", " + COL_4 + " = " + prichObed + ", " + COL_5 + " = " + odchod + ", " + COL_6 + " = '" + poznamka + "', " + COL_ODPR + " = '" + "'  WHERE " + COL_ID + " = '" + id + "' AND " + COL_1 + " = '" + meno + "'";
         db.execSQL(sql);
         return true;
     }
